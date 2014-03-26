@@ -23,7 +23,7 @@ public class RunActivity extends Activity implements UpdateCallback {
 		TermSession session = new TermSession();
 
         /* ... create a process ... */
-        ProcessBuilder execBuild = new ProcessBuilder("/data/data/jackpal.androidterm/java/java", "-jar", "/sdcard/Download/HelloJava_1-0-0.jar");
+        ProcessBuilder execBuild = new ProcessBuilder("/data/data/jackpal.androidterm/java/execpty", "/data/data/jackpal.androidterm/java/java", "-jar", "/sdcard/Download/HelloJava_1-0-0.jar");
         execBuild.redirectErrorStream(true);
         Process exec = null;
         try {
