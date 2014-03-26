@@ -19,6 +19,7 @@ public class RunActivity extends Activity implements UpdateCallback {
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		System.out.println(getIntent().getDataString());
 		Bundle b = getIntent().getExtras();
 		//create a new terminal session
 		session = new TermSession();
@@ -29,7 +30,7 @@ public class RunActivity extends Activity implements UpdateCallback {
 		}
 		else{
 			String javapath = getSharedPreferences("settings", 1).getString("path3", "");
-			execBuild = new ProcessBuilder("/data/data/jackpal.androidterm/java/execpty", javapath+"/java", "-jar", "/sdcard/Download/HelloJava_1-0-0.jar");
+			execBuild = new ProcessBuilder("/data/data/jackpal.androidterm/java/execpty", javapath+"/java", "-jar", getIntent().getDataString());
 		}
         execBuild.redirectErrorStream(true);
         Process exec = null;

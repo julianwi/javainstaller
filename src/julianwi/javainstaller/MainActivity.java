@@ -1,8 +1,12 @@
 package julianwi.javainstaller;
 
+import java.net.URI;
+
+import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -68,6 +72,28 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 		Checkforfile cff = new Checkforfile();
 		cff.scan(checks);
 		listenAdapter.notifyDataSetChanged();
+	}
+	
+	public void choosefile(String type){
+		Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType(type);
+        startActivityForResult(intent,0);
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		switch(requestCode){
+		case 0:
+			if(resultCode==RESULT_OK){
+				String FilePath = data.getData().getPath();
+				Intent intent = new Intent(MainActivity.context, RunActivity.class);
+				intent.setDataAndType(Uri.parse(FilePath), "application/java-archive");
+			    MainActivity.context.startActivity(intent);
+			}
+			break;
+	
+		}
 	}
 
 }

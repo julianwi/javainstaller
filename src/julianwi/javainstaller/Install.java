@@ -87,7 +87,7 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 	@Override
 	public void run() {
 		try{
-			//new Download(mProgressDialog, url, handler, "/data/data/julianwi.javainstaller/"+tmp[mcheck.id]).start();
+			new Download(mProgressDialog, url, handler, "/data/data/julianwi.javainstaller/"+tmp[mcheck.id]).start();
 			if(mcheck.id == 0){
 				chmod(new File("/data/data/julianwi.javainstaller/terminal.apk"), 0644);
 				Intent intent = new Intent(Intent.ACTION_VIEW);

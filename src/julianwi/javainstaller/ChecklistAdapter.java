@@ -1,5 +1,6 @@
 package julianwi.javainstaller;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.view.View;
@@ -14,9 +15,11 @@ public class ChecklistAdapter extends BaseAdapter implements OnClickListener {
 	
 	public CheckPoint[] List;
 	public Context mcontext;
+	public MainActivity ma;
 	
-	public ChecklistAdapter(Context context, CheckPoint[] items) {
-		mcontext = context;
+	public ChecklistAdapter(MainActivity ma, CheckPoint[] items) {
+		mcontext = ma;
+		this.ma = ma;
 	    List = items;
 	}
 
@@ -83,8 +86,9 @@ public class ChecklistAdapter extends BaseAdapter implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		Intent intent = new Intent(MainActivity.context, RunActivity.class);
-	    MainActivity.context.startActivity(intent);
+		ma.choosefile("application/java-archive");
+		/*Intent intent = new Intent(MainActivity.context, RunActivity.class);
+	    MainActivity.context.startActivity(intent);*/
 	}
 
 }
