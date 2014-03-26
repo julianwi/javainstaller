@@ -5,34 +5,41 @@ import jackpal.androidterm.emulatorview.TermSession;
 import jackpal.androidterm.emulatorview.UpdateCallback;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.DisplayMetrics;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
 public class RunActivity extends Activity implements UpdateCallback {
 	
 	private EmulatorView emulatorview;
+	public TermSession session;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		//getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE);
+		Bundle b = getIntent().getExtras();
 		//create a new terminal session
-		TermSession session = new TermSession();
-
-        /* ... create a process ... */
-        ProcessBuilder execBuild = new ProcessBuilder("/data/data/jackpal.androidterm/java/execpty", "/data/data/jackpal.androidterm/java/java", "-jar", "/sdcard/Download/HelloJava_1-0-0.jar");
+		session = new TermSession();
+        //create a pty
+		ProcessBuilder execBuild;
+		if(b != null && (Boolean)b.get("install")==true){
+			execBuild = new ProcessBuilder("/data/data/jackpal.androidterm/java/execpty", "/system/bin/sh", "/data/data/julianwi.javainstaller/install.sh");
+		}
+		else{
+			String javapath = getSharedPreferences("settings", 1).getString("path3", "");
+			execBuild = new ProcessBuilder("/data/data/jackpal.androidterm/java/execpty", javapath+"/java", "-jar", "/sdcard/Download/HelloJava_1-0-0.jar");
+		}
         execBuild.redirectErrorStream(true);
         Process exec = null;
         try {
             exec = execBuild.start();
         } catch (Exception e) {
             e.printStackTrace();
+            new Error("error", e.toString(), this);
         }
-
-        /* ... and connect the process's I/O streams to the TermSession. */
+        //connect the pty's I/O streams to the TermSession.
         session.setTermIn(exec.getInputStream());
         session.setTermOut(exec.getOutputStream());
 		//create the EmulatorView

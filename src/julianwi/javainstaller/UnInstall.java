@@ -8,6 +8,7 @@ import java.io.Writer;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 
 public class UnInstall {
 	
@@ -34,10 +35,19 @@ public class UnInstall {
 				writer.write("exit");
 				writer.close();
 				Install.chmod(new File("/data/data/julianwi.javainstaller/install.sh"), 0755);
-				Intent i = new Intent("jackpal.androidterm.RUN_SCRIPT");
-				i.addCategory(Intent.CATEGORY_DEFAULT);
-				i.putExtra("jackpal.androidterm.iInitialCommand", "sh /data/data/julianwi.javainstaller/install.sh\n$bbdir sleep 5\nexit");
-				MainActivity.context.startActivity(i);
+				if(mcheck.getPath().startsWith("/data/data/julianwi.javainstaller")){
+					Intent intent = new Intent(MainActivity.context, RunActivity.class);
+					Bundle b = new Bundle();
+					b.putBoolean("install", true);
+					intent.putExtras(b);
+					MainActivity.context.startActivity(intent);
+				}
+				else{
+					Intent i = new Intent("jackpal.androidterm.RUN_SCRIPT");
+					i.addCategory(Intent.CATEGORY_DEFAULT);
+					i.putExtra("jackpal.androidterm.iInitialCommand", "sh /data/data/julianwi.javainstaller/install.sh\n$bbdir sleep 5\nexit");
+					MainActivity.context.startActivity(i);
+				}
 			}
 		}catch(Exception e){
 			new Error("error", e.getMessage());

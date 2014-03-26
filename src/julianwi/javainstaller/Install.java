@@ -16,6 +16,7 @@ import android.content.Intent;
 import android.content.DialogInterface.OnCancelListener;
 import android.content.DialogInterface.OnClickListener;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Handler;
 import android.widget.EditText;
 
@@ -86,7 +87,7 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 	@Override
 	public void run() {
 		try{
-			new Download(mProgressDialog, url, handler, "/data/data/julianwi.javainstaller/"+tmp[mcheck.id]).start();
+			//new Download(mProgressDialog, url, handler, "/data/data/julianwi.javainstaller/"+tmp[mcheck.id]).start();
 			if(mcheck.id == 0){
 				chmod(new File("/data/data/julianwi.javainstaller/terminal.apk"), 0644);
 				Intent intent = new Intent(Intent.ACTION_VIEW);
@@ -111,16 +112,30 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 				}
 				else if(mcheck.id == 2 || mcheck.id == 3){
 					writer.write("$bbdir mkdir -p "+mcheck.getPath()+"\n$bbdir chmod 0755 "+mcheck.getPath()+"\ncd "+mcheck.getPath()+"\n");
-					writer.write("$bbdir tar -xvzf /data/data/julianwi.javainstaller/"+tmp[mcheck.id]+"\n");
+					writer.write("$bbdir tar -xvzpf /data/data/julianwi.javainstaller/"+tmp[mcheck.id]+"\n");
+				}
+				if(mcheck.id == 3){
+					writer.write("echo \"#!/system/bin/sh\" > "+mcheck.getPath()+"/java\n"
+							   + "echo \"export LD_LIBRARY_PATH="+mcheck.getPath()+"/lib:"+MainActivity.checks[2].getPath()+"\" >> "+mcheck.getPath()+"/java\n"
+							   + "echo \""+mcheck.getPath()+"/jamvm -Xbootclasspath:"+mcheck.getPath()+"/lib/classes.zip:"+mcheck.getPath()+"/lib/glibj.zip \\$@\" >> "+mcheck.getPath()+"/java\n");
 				}
 				writer.write("echo installation complete\n");
 				writer.write("exit");
 				writer.close();
 				chmod(new File("/data/data/julianwi.javainstaller/install.sh"), 0755);
-				Intent i = new Intent("jackpal.androidterm.RUN_SCRIPT");
-				i.addCategory(Intent.CATEGORY_DEFAULT);
-				i.putExtra("jackpal.androidterm.iInitialCommand", "sh /data/data/julianwi.javainstaller/install.sh\n$bbdir sleep 5\nexit");
-				MainActivity.context.startActivity(i);
+				if(mcheck.getPath().startsWith("/data/data/julianwi.javainstaller")){
+					Intent intent = new Intent(MainActivity.context, RunActivity.class);
+					Bundle b = new Bundle();
+					b.putBoolean("install", true);
+					intent.putExtras(b);
+					MainActivity.context.startActivity(intent);
+				}
+				else{
+					Intent i = new Intent("jackpal.androidterm.RUN_SCRIPT");
+					i.addCategory(Intent.CATEGORY_DEFAULT);
+					i.putExtra("jackpal.androidterm.iInitialCommand", "sh /data/data/julianwi.javainstaller/install.sh\n$bbdir sleep 5\nexit");
+					MainActivity.context.startActivity(i);
+				}
 			}
 		}catch(Exception e){
 			e.printStackTrace();
