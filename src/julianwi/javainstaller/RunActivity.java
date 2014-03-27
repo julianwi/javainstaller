@@ -14,35 +14,36 @@ import android.view.View;
 public class RunActivity extends Activity implements UpdateCallback {
 	
 	private EmulatorView emulatorview;
-	public TermSession session;
+	public static TermSession session;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		System.out.println(getIntent().getDataString());
 		Bundle b = getIntent().getExtras();
-		//create a new terminal session
-		session = new TermSession();
-        //create a pty
-		ProcessBuilder execBuild;
-		if(b != null && (Boolean)b.get("install")==true){
-			execBuild = new ProcessBuilder("/data/data/jackpal.androidterm/java/execpty", "/system/bin/sh", "/data/data/julianwi.javainstaller/install.sh");
+		if(session==null || savedInstanceState==null){
+			//create a new terminal session
+			session = new TermSession();
+	        //create a pty
+			ProcessBuilder execBuild;
+			if(b != null && (Boolean)b.get("install")==true){
+				execBuild = new ProcessBuilder("/data/data/jackpal.androidterm/java/execpty", "/system/bin/sh", "/data/data/julianwi.javainstaller/install.sh");
+			}
+			else{
+				String javapath = getSharedPreferences("settings", 1).getString("path3", "");
+				execBuild = new ProcessBuilder("/data/data/jackpal.androidterm/java/execpty", javapath+"/java", "-jar", getIntent().getDataString());
+			}
+	        execBuild.redirectErrorStream(true);
+	        Process exec = null;
+	        try {
+	            exec = execBuild.start();
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            new Error("error", e.toString(), this);
+	        }
+	        //connect the pty's I/O streams to the TermSession.
+	        session.setTermIn(exec.getInputStream());
+	        session.setTermOut(exec.getOutputStream());
 		}
-		else{
-			String javapath = getSharedPreferences("settings", 1).getString("path3", "");
-			execBuild = new ProcessBuilder("/data/data/jackpal.androidterm/java/execpty", javapath+"/java", "-jar", getIntent().getDataString());
-		}
-        execBuild.redirectErrorStream(true);
-        Process exec = null;
-        try {
-            exec = execBuild.start();
-        } catch (Exception e) {
-            e.printStackTrace();
-            new Error("error", e.toString(), this);
-        }
-        //connect the pty's I/O streams to the TermSession.
-        session.setTermIn(exec.getInputStream());
-        session.setTermOut(exec.getOutputStream());
 		//create the EmulatorView
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
