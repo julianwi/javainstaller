@@ -1,16 +1,35 @@
 package julianwi.javainstaller;
 
+import java.io.File;
 import java.net.URI;
+import java.util.List;
 
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
+import android.content.pm.ActivityInfo;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.FeatureInfo;
+import android.content.pm.InstrumentationInfo;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.PermissionGroupInfo;
+import android.content.pm.PermissionInfo;
+import android.content.pm.ProviderInfo;
+import android.content.pm.ResolveInfo;
+import android.content.pm.ServiceInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
+import android.content.res.Resources;
+import android.content.res.XmlResourceParser;
+import android.graphics.drawable.Drawable;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.ListView;
 
 public class MainActivity extends Activity implements OnSharedPreferenceChangeListener {
@@ -30,6 +49,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 	public static Context context;
 	public static Context termcontext;
 	//public OnClickListener onclick = new Install(this ,checklist);
+	public static MainActivity ma;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +69,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         listenAdapter = new ChecklistAdapter(this, checks);
         lv.setAdapter(listenAdapter);
         setContentView(lv);
+        ma = this;
 	}
 	
 	@Override
@@ -57,13 +78,35 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 		cff.scan(checks);
 		listenAdapter.notifyDataSetChanged();
 		super.onResume();
+		if(checkCallingOrSelfPermission("jackpal.androidterm.permission.RUN_SCRIPT")!=PackageManager.PERMISSION_GRANTED){
+			try {
+				getPackageManager().getPackageInfo("jackpal.androidterm", PackageManager.GET_ACTIVITIES);
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+			    intent.setDataAndType(Uri.fromFile(new File(getPackageCodePath())), "application/vnd.android.package-archive");
+			    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			    startActivity(intent);
+			} catch (NameNotFoundException e) {
+			}
+		}
 	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		menu.add("settings");
+		//menu.add("settings");
+		menu.add(0, 0, 0, "settings");
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case 0:
+	        	Intent intent = new Intent(MainActivity.context, SettingsActivity.class);
+			    MainActivity.context.startActivity(intent);
+	            return true;
+	     }
+		return false;
 	}
 
 	@Override
@@ -91,8 +134,14 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 				intent.setDataAndType(Uri.parse(FilePath), "application/java-archive");
 			    MainActivity.context.startActivity(intent);
 			}
-			break;
-	
+		case 1:
+			if(resultCode==RESULT_OK){
+				Intent intent = new Intent(Intent.ACTION_VIEW);
+				System.out.println(getPackageCodePath());
+			    intent.setDataAndType(Uri.fromFile(new File("/data/data/julianwi.javainstaller/terminal.apk")), "application/vnd.android.package-archive");
+			    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			    //MainActivity.ma.startActivityForResult(intent, 1);
+			}
 		}
 	}
 

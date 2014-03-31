@@ -87,13 +87,13 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 	@Override
 	public void run() {
 		try{
-			new Download(mProgressDialog, url, handler, "/data/data/julianwi.javainstaller/"+tmp[mcheck.id]).start();
+			//new Download(mProgressDialog, url, handler, "/data/data/julianwi.javainstaller/"+tmp[mcheck.id]).start();
 			if(mcheck.id == 0){
 				chmod(new File("/data/data/julianwi.javainstaller/terminal.apk"), 0644);
 				Intent intent = new Intent(Intent.ACTION_VIEW);
 			    intent.setDataAndType(Uri.fromFile(new File("/data/data/julianwi.javainstaller/terminal.apk")), "application/vnd.android.package-archive");
 			    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			    MainActivity.context.startActivity(intent);
+			    MainActivity.ma.startActivityForResult(intent, 1);
 			}
 			else{
 				if(mcheck.id == 1){
@@ -124,11 +124,16 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 				writer.close();
 				chmod(new File("/data/data/julianwi.javainstaller/install.sh"), 0755);
 				if(mcheck.getPath().startsWith("/data/data/julianwi.javainstaller")){
+					try{
 					Intent intent = new Intent(MainActivity.context, RunActivity.class);
 					Bundle b = new Bundle();
 					b.putBoolean("install", true);
 					intent.putExtras(b);
 					MainActivity.context.startActivity(intent);
+					} catch(Exception e){
+						e.printStackTrace();
+						new Error("error", e.toString());
+					}
 				}
 				else{
 					Intent i = new Intent("jackpal.androidterm.RUN_SCRIPT");

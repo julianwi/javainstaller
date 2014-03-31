@@ -1,55 +1,54 @@
 package julianwi.javainstaller;
 
-import jackpal.androidterm.emulatorview.EmulatorView;
-import jackpal.androidterm.emulatorview.TermSession;
-import jackpal.androidterm.emulatorview.UpdateCallback;
+import java.io.InputStream;
+import java.io.OutputStream;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.SharedPreferences;
+import android.content.Context;
+import android.content.res.Configuration;
 import android.util.DisplayMetrics;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 
-public class RunActivity extends Activity implements UpdateCallback {
+public class RunActivity extends Activity {
 	
-	private EmulatorView emulatorview;
-	public static TermSession session;
+	private View emulatorview;
+	public static Object session;
+    private static Process exec;
+    public ClassLoader classloader;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle b = getIntent().getExtras();
-		if(session==null || savedInstanceState==null){
+		try{
+			String apkfile = getPackageManager().getApplicationInfo("jackpal.androidterm", 0).sourceDir;
+			classloader = new dalvik.system.PathClassLoader(apkfile, ClassLoader.getSystemClassLoader());
+			Bundle b = getIntent().getExtras();
 			//create a new terminal session
-			session = new TermSession();
-	        //create a pty
+			session = Class.forName("jackpal.androidterm.emulatorview.TermSession", true, classloader).getConstructor().newInstance(new Object[]{});
+			//create a pty
 			ProcessBuilder execBuild;
 			if(b != null && (Boolean)b.get("install")==true){
-				execBuild = new ProcessBuilder("/data/data/jackpal.androidterm/java/execpty", "/system/bin/sh", "/data/data/julianwi.javainstaller/install.sh");
+				execBuild = new ProcessBuilder(/*"/data/data/jackpal.androidterm/java/execpty", */"/system/bin/sh", "/data/data/julianwi.javainstaller/install.sh");
 			}
 			else{
 				String javapath = getSharedPreferences("settings", 1).getString("path3", "");
-				execBuild = new ProcessBuilder("/data/data/jackpal.androidterm/java/execpty", javapath+"/java", "-jar", getIntent().getDataString());
+				execBuild = new ProcessBuilder(/*"/data/data/jackpal.androidterm/java/execpty", */javapath+"/java", "-verbose:jni", "-jar", getIntent().getDataString());
 			}
 	        execBuild.redirectErrorStream(true);
-	        Process exec = null;
-	        try {
-	            exec = execBuild.start();
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	            new Error("error", e.toString(), this);
-	        }
+	        exec = execBuild.start();
 	        //connect the pty's I/O streams to the TermSession.
-	        session.setTermIn(exec.getInputStream());
-	        session.setTermOut(exec.getOutputStream());
+	        session.getClass().getMethod("setTermIn", InputStream.class).invoke(session, new Object[]{exec.getInputStream()});
+	        session.getClass().getMethod("setTermOut", OutputStream.class).invoke(session, new Object[]{exec.getOutputStream()});
+	        //create the EmulatorView
+			DisplayMetrics metrics = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(metrics);
+			emulatorview = (View) Class.forName("jackpal.androidterm.emulatorview.EmulatorView", true, classloader).getConstructor(Context.class, session.getClass(), DisplayMetrics.class).newInstance(new Object[]{this, session, metrics});
+			setContentView(emulatorview);
+		}catch(Exception e){
+			e.printStackTrace();
+			new Error("error", e.toString(), this);
 		}
-		//create the EmulatorView
-		DisplayMetrics metrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		emulatorview = new EmulatorView(this, session, metrics);
-		emulatorview.setOnKeyListener(mKeyListener);
-		setContentView(emulatorview);
 	}
 
 	@Override
@@ -58,19 +57,30 @@ public class RunActivity extends Activity implements UpdateCallback {
 		menu.add("settings");
 		return true;
 	}
-
+	
 	@Override
-	public void onUpdate() {
-		// TODO Auto-generated method stub
-		
+	public void onConfigurationChanged(Configuration newConfig) {
+	    super.onConfigurationChanged(newConfig);
+	    try {
+	    	DisplayMetrics metrics = new DisplayMetrics();
+			getWindowManager().getDefaultDisplay().getMetrics(metrics);
+			emulatorview = (View) Class.forName("jackpal.androidterm.emulatorview.EmulatorView", true, classloader).getConstructor(Context.class, session.getClass(), DisplayMetrics.class).newInstance(new Object[]{this, session, metrics});
+			setContentView(emulatorview);
+		} catch (Exception e) {
+			e.printStackTrace();
+			new Error("error", e.toString(), this);
+		}
 	}
 	
-	private View.OnKeyListener mKeyListener = new View.OnKeyListener() {
-		@Override
-		public boolean onKey(View v, int keyCode, KeyEvent event) {
-			// TODO Auto-generated method stub
-			return false;
+	@Override
+	public void onDestroy(){
+		super.onDestroy();
+		try{
+			exec.destroy();
+		} catch(Exception e){
+			e.printStackTrace();
+			new Error("error", e.toString(), this);
 		}
-	};
+	}
 
 }
