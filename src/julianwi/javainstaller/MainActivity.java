@@ -1,6 +1,8 @@
 package julianwi.javainstaller;
 
 import java.io.File;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.net.URI;
 import java.util.List;
 
@@ -70,6 +72,32 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         lv.setAdapter(listenAdapter);
         setContentView(lv);
         ma = this;
+        
+        File binDir = new File("/data/data/julianwi.javainstaller/bin");
+        if (!binDir.exists()) {
+            try {
+                binDir.mkdir();
+                Install.chmod(binDir, 0755);
+            } catch (Exception e) {
+            	e.printStackTrace();
+            	new Error("error", e.toString());
+            }
+        }
+        File binary = new File(binDir, "execpty");
+        try {
+            InputStream src = getAssets().open("execpty");
+            FileOutputStream dst = new FileOutputStream(binary);
+            byte[] buffer = new byte[4096];
+            int bytesRead = 0;
+            while ((bytesRead = src.read(buffer)) >= 0) {
+                dst.write(buffer, 0, bytesRead);
+            }
+            dst.close();
+            Install.chmod(binary, 0755);
+        } catch (Exception e) {
+        	e.printStackTrace();
+        	new Error("error", e.toString());
+        }
 	}
 	
 	@Override
@@ -125,7 +153,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 	
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		// TODO Auto-generated method stub
+		System.out.println("result"+requestCode);
 		switch(requestCode){
 		case 0:
 			if(resultCode==RESULT_OK){
@@ -133,14 +161,6 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 				Intent intent = new Intent(MainActivity.context, RunActivity.class);
 				intent.setDataAndType(Uri.parse(FilePath), "application/java-archive");
 			    MainActivity.context.startActivity(intent);
-			}
-		case 1:
-			if(resultCode==RESULT_OK){
-				Intent intent = new Intent(Intent.ACTION_VIEW);
-				System.out.println(getPackageCodePath());
-			    intent.setDataAndType(Uri.fromFile(new File("/data/data/julianwi.javainstaller/terminal.apk")), "application/vnd.android.package-archive");
-			    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			    //MainActivity.ma.startActivityForResult(intent, 1);
 			}
 		}
 	}

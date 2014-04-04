@@ -29,11 +29,11 @@ public class RunActivity extends Activity {
 			//create a pty
 			ProcessBuilder execBuild;
 			if(b != null && (Boolean)b.get("install")==true){
-				execBuild = new ProcessBuilder(/*"/data/data/jackpal.androidterm/java/execpty", */"/system/bin/sh", "/data/data/julianwi.javainstaller/install.sh");
+				execBuild = new ProcessBuilder("/data/data/julianwi.javainstaller/bin/execpty", "/system/bin/sh", "/data/data/julianwi.javainstaller/install.sh");
 			}
 			else{
 				String javapath = getSharedPreferences("settings", 1).getString("path3", "");
-				execBuild = new ProcessBuilder(/*"/data/data/jackpal.androidterm/java/execpty", */javapath+"/java", "-verbose:jni", "-jar", getIntent().getDataString());
+				execBuild = new ProcessBuilder("/data/data/julianwi.javainstaller/bin/execpty", javapath+"/java", "-jar", getIntent().getDataString());
 			}
 	        execBuild.redirectErrorStream(true);
 	        exec = execBuild.start();

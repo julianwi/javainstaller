@@ -87,13 +87,13 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 	@Override
 	public void run() {
 		try{
-			//new Download(mProgressDialog, url, handler, "/data/data/julianwi.javainstaller/"+tmp[mcheck.id]).start();
+			new Download(mProgressDialog, url, handler, "/data/data/julianwi.javainstaller/"+tmp[mcheck.id]).start();
 			if(mcheck.id == 0){
 				chmod(new File("/data/data/julianwi.javainstaller/terminal.apk"), 0644);
 				Intent intent = new Intent(Intent.ACTION_VIEW);
 			    intent.setDataAndType(Uri.fromFile(new File("/data/data/julianwi.javainstaller/terminal.apk")), "application/vnd.android.package-archive");
 			    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			    MainActivity.ma.startActivityForResult(intent, 1);
+			    MainActivity.context.startActivity(intent);
 			}
 			else{
 				if(mcheck.id == 1){
@@ -113,17 +113,20 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 				else if(mcheck.id == 2 || mcheck.id == 3){
 					writer.write("$bbdir mkdir -p "+mcheck.getPath()+"\n$bbdir chmod 0755 "+mcheck.getPath()+"\ncd "+mcheck.getPath()+"\n");
 					writer.write("$bbdir tar -xvzpf /data/data/julianwi.javainstaller/"+tmp[mcheck.id]+"\n");
+					writer.write("$bbdir chmod 0755 *\n");
 				}
 				if(mcheck.id == 3){
 					writer.write("echo \"#!/system/bin/sh\" > "+mcheck.getPath()+"/java\n"
 							   + "echo \"export LD_LIBRARY_PATH="+mcheck.getPath()+"/lib:"+MainActivity.checks[2].getPath()+"\" >> "+mcheck.getPath()+"/java\n"
 							   + "echo \""+mcheck.getPath()+"/jamvm -Xbootclasspath:"+mcheck.getPath()+"/lib/classes.zip:"+mcheck.getPath()+"/lib/glibj.zip \\$@\" >> "+mcheck.getPath()+"/java\n");
+					writer.write("$bbdir chmod 0755 "+mcheck.getPath()+"/lib/*\n");
 				}
 				writer.write("echo installation complete\n");
 				writer.write("exit");
 				writer.close();
 				chmod(new File("/data/data/julianwi.javainstaller/install.sh"), 0755);
-				if(mcheck.getPath().startsWith("/data/data/julianwi.javainstaller")){
+				String runmode = MainActivity.context.getSharedPreferences("julianwi.javainstaller_preferences", 1).getString("runmode", "auto");
+				if(runmode=="Run Activity" || (runmode=="auto"&&mcheck.getPath().startsWith("/data/data/julianwi.javainstaller"))){
 					try{
 					Intent intent = new Intent(MainActivity.context, RunActivity.class);
 					Bundle b = new Bundle();

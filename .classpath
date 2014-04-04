@@ -6,5 +6,6 @@
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.DEPENDENCIES"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK/emulatorview"/>
+	<classpathentry kind="lib" path="/home/julian/workspace/javainstaller/emulatorview.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
