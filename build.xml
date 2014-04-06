@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="MyProject" default="dist" basedir=".">
-    <target name="dist" description="generate the distribution" >
+<project name="MyProject" default="rename" basedir=".">
+    <target name="rename" description="rename execpty" >
         <move file="libs/x86/execpty" tofile="libs/x86/libexecpty.so" failonerror="false"/>
+    </target>
+
+    <target name="clean" description="clean up" >
     </target>
 </project>
