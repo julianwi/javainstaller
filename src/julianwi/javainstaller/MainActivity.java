@@ -1,9 +1,12 @@
 package julianwi.javainstaller;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.List;
 
 import android.net.Uri;
@@ -85,7 +88,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         }
         File binary = new File(binDir, "execpty");
         try {
-            InputStream src = getAssets().open("execpty");
+            InputStream src = new FileInputStream(new File("/data/data/julianwi.javainstaller/lib/libexecpty.so"));
             FileOutputStream dst = new FileOutputStream(binary);
             byte[] buffer = new byte[4096];
             int bytesRead = 0;
