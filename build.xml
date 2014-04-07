@@ -6,4 +6,7 @@
 
     <target name="clean" description="clean up" >
     </target>
+    
+    <target name="release" description="release" >
+    </target>
 </project>
