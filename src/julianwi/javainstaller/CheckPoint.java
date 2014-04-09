@@ -21,6 +21,11 @@ public class CheckPoint implements OnClickListener,
 		installed = false;
 		id = Id;
 		source = Source;
+		if(Install.getArch()=="arm"){
+			if(Install.arm.length>Id && Install.arm[Id] != null){
+				source = Install.arm[Id];
+			}
+		}
 	}
 	
 	public String getPath(){

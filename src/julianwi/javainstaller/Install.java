@@ -27,6 +27,7 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 	private Handler handler = new Handler();
 	private URL url;
 	private String[] tmp = new String[]{"terminal.apk", "busybox", "libc.tar.gz", "java.tar.gz"};
+	public static String[] arm = new String[]{null, "http://borcteam.bplaced.net/Daten/java/arm/busybox"};
 	
 	public Install(CheckPoint check){
 		mcheck = check;
@@ -163,5 +164,16 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 	    Method setPermissions = fileUtils.getMethod("setPermissions", String.class, int.class, int.class, int.class);
 	    return (Integer) setPermissions.invoke(null, path.getAbsolutePath(), mode, -1, -1);
 	}
+	
+	public static String getArch() {
+        // Returns the value of uname -m
+        String machine = System.getProperty("os.arch");
+        // Convert machine name to arch identifier
+        if (machine.matches("armv[0-9]+(tej?)?l")) {
+            return "arm";
+        } else {
+        	return "x86";
+        }
+    }
 
 }
