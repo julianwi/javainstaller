@@ -27,7 +27,7 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 	private Handler handler = new Handler();
 	private URL url;
 	private String[] tmp = new String[]{"terminal.apk", "busybox", "libc.tar.gz", "java.tar.gz"};
-	public static String[] arm = new String[]{null, "http://borcteam.bplaced.net/Daten/java/arm/busybox"};
+	public static String[] arm = new String[]{null, "http://borcteam.bplaced.net/Daten/java/arm/busybox", "http://borcteam.bplaced.net/Daten/java/arm/libc.tar.gz", "http://borcteam.bplaced.net/Daten/java/arm/java.tar.gz"};
 	
 	public Install(CheckPoint check){
 		mcheck = check;
@@ -120,6 +120,7 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 					writer.write("echo \"#!/system/bin/sh\" > "+mcheck.getPath()+"/java\n"
 							   + "echo \"export LD_LIBRARY_PATH="+mcheck.getPath()+"/lib:"+MainActivity.checks[2].getPath()+"\" >> "+mcheck.getPath()+"/java\n"
 							   + "echo \""+mcheck.getPath()+"/jamvm -Xbootclasspath:"+mcheck.getPath()+"/lib/classes.zip:"+mcheck.getPath()+"/lib/glibj.zip \\$@\" >> "+mcheck.getPath()+"/java\n");
+					writer.write("$bbdir chmod 0755 "+mcheck.getPath()+"/java\n");
 					writer.write("$bbdir chmod 0755 "+mcheck.getPath()+"/lib/*\n");
 				}
 				writer.write("echo installation complete\n");
@@ -169,7 +170,7 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
         // Returns the value of uname -m
         String machine = System.getProperty("os.arch");
         // Convert machine name to arch identifier
-        if (machine.matches("armv[0-9]+(tej?)?l")) {
+        if (machine.matches("armv[0-9]+(tej?)?l") || machine.equals("OS_ARCH")) {
             return "arm";
         } else {
         	return "x86";
