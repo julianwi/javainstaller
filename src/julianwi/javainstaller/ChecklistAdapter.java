@@ -59,6 +59,11 @@ public class ChecklistAdapter extends BaseAdapter implements OnClickListener {
 			    Button b2 = new Button(mcontext);
 			    b2.setText("change path");
 			    b2.setId(1);
+			    //disable change path for terminal
+			    if(position == 0){
+			    	b2.setEnabled(false);
+			    	System.out.println(b2.getText());
+			    }
 			    b2.setOnClickListener(List[position]);
 				ll.addView(b1);
 				ll.addView(b2);

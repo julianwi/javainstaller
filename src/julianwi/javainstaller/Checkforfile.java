@@ -1,25 +1,35 @@
 package julianwi.javainstaller;
 
 import java.io.File;
+
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageManager.NameNotFoundException;
 
 public class Checkforfile {
 	
 	 public void scan(CheckPoint[] checks){
+		 Editor edit = MainActivity.sharedP.edit();
 		 if(!MainActivity.sharedP.contains("path0")){
-			 Editor edit = MainActivity.sharedP.edit();
-			 edit.putString("path0", "/data/app/jackpal.androidterm-1.apk");
+			 edit.putString("path0", "/data/app/jackpal.androidterm.apk");
 			 edit.putString("path1", "/data/data/jackpal.androidterm/bin/busybox");
 			 edit.putString("path2", "/data/data/jackpal.androidterm/libc");
 			 edit.putString("path3", "/data/data/julianwi.javainstaller/java");
 			 edit.commit();
 		 }
-		 if(checkfile(checks[0].getPath())){
+		 if(checkpackage("jackpal.androidterm")){
 			 checks[0].installed = true;
+			 try {
+				 edit.putString("path0", MainActivity.context.getPackageManager().getApplicationInfo("jackpal.androidterm", 0).sourceDir);
+			} catch (Exception e) {
+				 e.printStackTrace();
+				new Error("error", e.getMessage());
+			}
 		 }
 		 else{
 			 checks[0].installed = false;
+			 edit.putString("path0", "/data/app/jackpal.androidterm.apk");
 		 }
+		 edit.commit();
 		 if(checkfile(checks[1].getPath())){
 			 checks[1].installed = true;
 		 }
@@ -46,5 +56,14 @@ public class Checkforfile {
 			return true;
 		}
 		return false;
+	}
+	
+	public boolean checkpackage(String packagename) {
+	    try {
+	        MainActivity.context.getPackageManager().getPackageInfo(packagename, 0);
+	        return true;
+	    } catch (NameNotFoundException e) {
+	        return false;
+	    }
 	}
 }
