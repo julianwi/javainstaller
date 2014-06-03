@@ -26,7 +26,7 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 	private CheckPoint mcheck;
 	private Handler handler = new Handler();
 	private URL url;
-	private String[] tmp = new String[]{"terminal.apk", "busybox", "libc.tar.gz", "java.tar.gz"};
+	public static String[] tmp = new String[]{"terminal.apk", "busybox", "libc.tar.gz", "java.tar.gz"};
 	public static String[] arm = new String[]{null, "http://borcteam.bplaced.net/Daten/java/arm/busybox", "http://borcteam.bplaced.net/Daten/java/arm/libc.tar.gz", "http://borcteam.bplaced.net/Daten/java/arm/java.tar.gz"};
 	
 	public Install(CheckPoint check){

@@ -24,6 +24,7 @@ public class Checkforfile {
 				 e.printStackTrace();
 				new Error("error", e.getMessage());
 			}
+			 new File("/data/data/julianwi.javainstaller/"+Install.tmp[checks[0].id]).delete();
 		 }
 		 else{
 			 checks[0].installed = false;
@@ -32,18 +33,21 @@ public class Checkforfile {
 		 edit.commit();
 		 if(checkfile(checks[1].getPath())){
 			 checks[1].installed = true;
+			 new File("/data/data/julianwi.javainstaller/"+Install.tmp[checks[1].id]).delete();
 		 }
 		 else{
 			 checks[1].installed = false;
 		 }
 		 if(checkfile(checks[2].getPath())){
 			 checks[2].installed = true;
+			 new File("/data/data/julianwi.javainstaller/"+Install.tmp[checks[2].id]).delete();
 		 }
 		 else{
 			 checks[2].installed = false;
 		 }
 		 if(checkfile(checks[3].getPath())){
 			 checks[3].installed = true;
+			 new File("/data/data/julianwi.javainstaller/"+Install.tmp[checks[3].id]).delete();
 		 }
 		 else{
 			 checks[3].installed = false;
