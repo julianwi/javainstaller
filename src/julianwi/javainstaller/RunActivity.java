@@ -2,9 +2,11 @@ package julianwi.javainstaller;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.util.DisplayMetrics;
 import android.view.Menu;
@@ -27,16 +29,30 @@ public class RunActivity extends Activity {
 			//create a new terminal session
 			session = Class.forName("jackpal.androidterm.emulatorview.TermSession", true, classloader).getConstructor().newInstance(new Object[]{});
 			//create a pty
+			SharedPreferences settings = MainActivity.context.getSharedPreferences("julianwi.javainstaller_preferences", 1);
 			ProcessBuilder execBuild;
 			if(b != null && (Boolean)b.get("install")==true){
-				execBuild = new ProcessBuilder("/data/data/julianwi.javainstaller/bin/execpty", "/system/bin/sh", "/data/data/julianwi.javainstaller/install.sh");
+				if(settings.getString("rootmode", "off") == "on"){
+					exec = Runtime.getRuntime().exec("/data/data/julianwi.javainstaller/bin/execpty /system/bin/su -c \"sh /data/data/julianwi.javainstaller/install.sh\"");
+				}
+				else{
+					exec = Runtime.getRuntime().exec("/data/data/julianwi.javainstaller/bin/execpty /system/bin/sh /data/data/julianwi.javainstaller/install.sh");
+				}
+				//execBuild = new ProcessBuilder("/data/data/julianwi.javainstaller/bin/execpty", "/system/bin/sh", "/data/data/julianwi.javainstaller/install.sh");
 			}
 			else{
 				String javapath = getSharedPreferences("settings", 1).getString("path3", "");
-				execBuild = new ProcessBuilder("/data/data/julianwi.javainstaller/bin/execpty", javapath+"/java", "-jar", getIntent().getDataString());
+				if(settings.getString("rootmode2", "off") == "on"){
+					//exec = Runtime.getRuntime().exec("/data/data/julianwi.javainstaller/bin/execpty /system/bin/su -c \"" + javapath+"/java -jar "+ getIntent().getDataString() + "\"");
+					exec = Runtime.getRuntime().exec("/data/data/julianwi.javainstaller/bin/execpty", new String[]{"/system/bin/su", "-c", javapath+"/java -jar "+getIntent().getDataString()});
+				}
+				else{
+					exec = Runtime.getRuntime().exec("/data/data/julianwi.javainstaller/bin/execpty " + javapath+"/java -jar "+ getIntent().getDataString());
+				}
+				//execBuild = new ProcessBuilder("/data/data/julianwi.javainstaller/bin/execpty", javapath+"/java", "-jar", getIntent().getDataString());
 			}
-	        execBuild.redirectErrorStream(true);
-	        exec = execBuild.start();
+	        /*execBuild.redirectErrorStream(true);
+	        exec = execBuild.start();*/
 	        //connect the pty's I/O streams to the TermSession.
 	        session.getClass().getMethod("setTermIn", InputStream.class).invoke(session, new Object[]{exec.getInputStream()});
 	        session.getClass().getMethod("setTermOut", OutputStream.class).invoke(session, new Object[]{exec.getOutputStream()});
