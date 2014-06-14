@@ -52,6 +52,13 @@ public class Checkforfile {
 		 else{
 			 checks[3].installed = false;
 		 }
+		 if(checkfile(checks[4].getPath()) && checkpackage("julianwi.awtpeer")){
+			 checks[4].installed = true;
+			 new File("/data/data/julianwi.javainstaller/"+Install.tmp[checks[4].id]).delete();
+		 }
+		 else{
+			 checks[4].installed = false;
+		 }
 	 }
 	 
 	public boolean checkfile(String filepath){

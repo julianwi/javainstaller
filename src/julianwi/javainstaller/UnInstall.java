@@ -25,11 +25,14 @@ public class UnInstall {
 			else{
 				Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/data/data/julianwi.javainstaller/install.sh"), "utf-8"));
 				writer.write("#!/system/bin/sh\nbbdir="+MainActivity.checks[1].getPath()+"\n");
-				if(mcheck.id == 1){
+				if(mcheck.id == 1 || mcheck.id == 4){
 					writer.write("$bbdir rm "+mcheck.getPath()+"\n");
 				}
 				else{
 					writer.write("$bbdir rm -r "+mcheck.getPath()+"\n");
+				}
+				if(mcheck.id == 4){
+					writer.write("am start -a android.intent.action.DELETE -d package:julianwi.awtpeer\n");
 				}
 				writer.write("echo uninstallation complete\n");
 				writer.write("exit");

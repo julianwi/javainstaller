@@ -44,7 +44,8 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 			new CheckPoint("install Terminal Emulator","http://borcteam.bplaced.net/Daten/java/jackpal.androidterm.apk" ,0),
 			new CheckPoint("install busybox","http://borcteam.bplaced.net/Daten/java/busybox" ,1),
 			new CheckPoint("install gnu libc","http://borcteam.bplaced.net/Daten/java/libc.tar.gz" ,2),
-			new CheckPoint("install precompiled versions of jamvm and gnu classpath","http://borcteam.bplaced.net/Daten/java/java.tar.gz" ,3)
+			new CheckPoint("install precompiled versions of jamvm and gnu classpath","http://borcteam.bplaced.net/Daten/java/java.tar.gz" ,3),
+			new CheckPoint("install awtonandroid libraries","http://borcteam.bplaced.net/Daten/java/awt.tar.gz" ,4)
 	};
 	//private String[] checklist = new String[]{"install busybox", "install Terminal Emulator", "install gnu libc", "install precompiled versions of jamvm and gnu classpath"};
 	//private Boolean[] checklist2 = new Boolean[]{false, false, false, false};

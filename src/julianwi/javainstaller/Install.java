@@ -26,7 +26,7 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 	private CheckPoint mcheck;
 	private Handler handler = new Handler();
 	private URL url;
-	public static String[] tmp = new String[]{"terminal.apk", "busybox", "libc.tar.gz", "java.tar.gz"};
+	public static String[] tmp = new String[]{"terminal.apk", "busybox", "libc.tar.gz", "java.tar.gz", "awt.tar.gz"};
 	public static String[] arm = new String[]{null, "http://borcteam.bplaced.net/Daten/java/arm/busybox", "http://borcteam.bplaced.net/Daten/java/arm/libc.tar.gz", "http://borcteam.bplaced.net/Daten/java/arm/java.tar.gz"};
 	
 	public Install(CheckPoint check){
@@ -116,12 +116,23 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 					writer.write("$bbdir tar -xvzpf /data/data/julianwi.javainstaller/"+tmp[mcheck.id]+"\n");
 					writer.write("$bbdir chmod 0755 *\n");
 				}
-				if(mcheck.id == 3){
-					writer.write("echo \"#!/system/bin/sh\" > "+mcheck.getPath()+"/java\n"
-							   + "echo \"export LD_LIBRARY_PATH="+mcheck.getPath()+"/lib:"+MainActivity.checks[2].getPath()+"\" >> "+mcheck.getPath()+"/java\n"
-							   + "echo \""+mcheck.getPath()+"/jamvm -Xbootclasspath:"+mcheck.getPath()+"/lib/classes.zip:"+mcheck.getPath()+"/lib/glibj.zip \\$@\" >> "+mcheck.getPath()+"/java\n");
-					writer.write("$bbdir chmod 0755 "+mcheck.getPath()+"/java\n");
-					writer.write("$bbdir chmod 0755 "+mcheck.getPath()+"/lib/*\n");
+				if(mcheck.id == 4){
+					writer.write("$bbdir mkdir -p "+MainActivity.checks[3].getPath()+"/lib\n$bbdir chmod 0755 "+MainActivity.checks[3].getPath()+"/lib\ncd "+MainActivity.checks[3].getPath()+"/lib\n");
+					writer.write("$bbdir tar -xvzpf /data/data/julianwi.javainstaller/"+tmp[mcheck.id]+"\n");
+					writer.write("$bbdir chmod 0755 *\n");
+					writer.write("am start -a android.intent.action.VIEW -d file://"+MainActivity.checks[3].getPath()+"/lib/awtonandroid.apk -t application/vnd.android.package-archive\n");
+				}
+				if(mcheck.id == 3 || mcheck.id == 4){
+					writer.write("echo \"#!/system/bin/sh\" > "+MainActivity.checks[3].getPath()+"/java\n"
+							   + "echo \"export LD_LIBRARY_PATH="+MainActivity.checks[3].getPath()+"/lib:"+MainActivity.checks[2].getPath()+"\" >> "+MainActivity.checks[3].getPath()+"/java\n");
+					if(MainActivity.checks[4].installed || mcheck.id == 4){
+						writer.write("echo \"exec "+MainActivity.checks[3].getPath()+"/jamvm -Xbootclasspath:"+MainActivity.checks[3].getPath()+"/lib/classes.zip:"+MainActivity.checks[3].getPath()+"/lib/glibj.zip:"+MainActivity.checks[3].getPath()+"/lib/awtpeer.zip -Dawt.toolkit=julianwi.awtpeer.AndroidToolkit \\$@\" >> "+MainActivity.checks[3].getPath()+"/java\n");
+					}
+					else{
+						writer.write("echo \"exec "+MainActivity.checks[3].getPath()+"/jamvm -Xbootclasspath:"+MainActivity.checks[3].getPath()+"/lib/classes.zip:"+MainActivity.checks[3].getPath()+"/lib/glibj.zip \\$@\" >> "+MainActivity.checks[3].getPath()+"/java\n");
+					}
+					writer.write("$bbdir chmod 0755 "+MainActivity.checks[3].getPath()+"/java\n");
+					writer.write("$bbdir chmod 0755 "+MainActivity.checks[3].getPath()+"/lib/*\n");
 				}
 				writer.write("echo installation complete\n");
 				writer.write("exit");

@@ -29,6 +29,9 @@ public class CheckPoint implements OnClickListener,
 	}
 	
 	public String getPath(){
+		if(id == 4){
+			return MainActivity.checks[3].getPath()+"/lib/awtpeer.zip";
+		}
 		return MainActivity.sharedP.getString("path"+id, "");
 	}
 

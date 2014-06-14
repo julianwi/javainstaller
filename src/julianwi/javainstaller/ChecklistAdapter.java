@@ -1,8 +1,6 @@
 package julianwi.javainstaller;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -43,8 +41,9 @@ public class ChecklistAdapter extends BaseAdapter implements OnClickListener {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
+		System.out.println("position: "+position+" length: "+List.length+" convertView: "+convertView);
 		if(position<List.length){
-			if(convertView == null){
+			if(convertView == null || convertView instanceof Button){
 				convertView = new LinearLayout(mcontext);
 				((LinearLayout) convertView).setOrientation(LinearLayout.VERTICAL);
 				TextView t1 = new TextView(mcontext);
@@ -59,10 +58,9 @@ public class ChecklistAdapter extends BaseAdapter implements OnClickListener {
 			    Button b2 = new Button(mcontext);
 			    b2.setText("change path");
 			    b2.setId(1);
-			    //disable change path for terminal
-			    if(position == 0){
+			    //disable change path for terminal and awt
+			    if(position == 0 || position == 4){
 			    	b2.setEnabled(false);
-			    	System.out.println(b2.getText());
 			    }
 			    b2.setOnClickListener(List[position]);
 				ll.addView(b1);
@@ -81,7 +79,7 @@ public class ChecklistAdapter extends BaseAdapter implements OnClickListener {
 		    
 		    return convertView;
 		}
-		if(convertView==null){
+		if(convertView==null || convertView instanceof LinearLayout){
 			convertView = new Button(MainActivity.context);
 			((Button) convertView).setText("run jar file");
 			((Button) convertView).setOnClickListener(this);
