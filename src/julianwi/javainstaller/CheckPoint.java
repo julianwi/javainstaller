@@ -1,8 +1,18 @@
 package julianwi.javainstaller;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager.NameNotFoundException;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -58,6 +68,8 @@ public class CheckPoint implements OnClickListener,
 		case 1:
 			showalert();
 			break;
+		case 3:
+			new Install(this);
 
 		default:
 			break;
@@ -84,6 +96,53 @@ public class CheckPoint implements OnClickListener,
 		});
 
 		alert.show();
+	}
+	
+	public String getversion(){
+		String version = "unknown";
+		if(id == 0){
+			try {
+				PackageInfo pInfo = MainActivity.context.getPackageManager().getPackageInfo("jackpal.androidterm", 0);
+				version = pInfo.versionName;
+			} catch (Exception e) {
+			}
+		}
+		if(id == 1){
+			try {
+				Process p;
+				p = Runtime.getRuntime().exec(getPath());
+				InputStream a = p.getInputStream();
+				InputStreamReader read = new InputStreamReader(a);
+				String line = (new BufferedReader(read)).readLine();
+				if(line == null){
+					version = "unknown";
+				}
+				else{
+					version = line.split("\\s+")[1];
+				}
+			} catch (IOException e) {
+			}
+		}
+		if(id == 2 || id == 3){
+			File versionfile = new File(getPath()+"/version");
+			if(versionfile.exists()){
+				try {
+					version = new BufferedReader(new InputStreamReader(new FileInputStream(versionfile))).readLine();
+				} catch (Exception e) {
+				}
+			}
+		}
+		if(id == 4){
+			try {
+				PackageInfo pInfo = MainActivity.context.getPackageManager().getPackageInfo("julianwi.awtpeer", 0);
+				version = pInfo.versionName;
+			} catch (Exception e) {
+			}
+		}
+		if(version == null){
+			version = "undefined";
+		}
+		return version;
 	}
 
 }

@@ -127,6 +127,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 		// Inflate the menu; this adds items to the action bar if it is present.
 		//menu.add("settings");
 		menu.add(0, 0, 0, "settings");
+		menu.add(0, 1, 0, "check for updates");
 		return true;
 	}
 	
@@ -137,6 +138,9 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 	        	Intent intent = new Intent(MainActivity.context, SettingsActivity.class);
 			    MainActivity.context.startActivity(intent);
 	            return true;
+	        case 1:
+	        	Thread update = new Update(listenAdapter, this);
+	        	update.start();
 	     }
 		return false;
 	}

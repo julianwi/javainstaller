@@ -41,7 +41,7 @@ public class ChecklistAdapter extends BaseAdapter implements OnClickListener {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		System.out.println("position: "+position+" length: "+List.length+" convertView: "+convertView);
+		//System.out.println("position: "+position+" length: "+List.length+" convertView: "+convertView);
 		if(position<List.length){
 			if(convertView == null || convertView instanceof Button){
 				convertView = new LinearLayout(mcontext);
@@ -68,7 +68,24 @@ public class ChecklistAdapter extends BaseAdapter implements OnClickListener {
 				((LinearLayout) convertView).addView(ll);
 			}
 			TextView tv1 = (TextView) convertView.findViewById(1);
-			tv1.setText(List[position].text + "\npath:" + List[position].getPath());
+			LinearLayout ll = (LinearLayout) convertView.findViewById(2);
+			if(Update.update[position]){
+				tv1.setText(List[position].text + "\npath:" + List[position].getPath()+"\n"+Update.updatetext[position]);
+				System.out.println(ll.findViewById(3));
+				if(!(ll.findViewById(3) instanceof Button)){
+					Button updatebutton = new Button(mcontext);
+					updatebutton.setId(3);
+					updatebutton.setText("update");
+					updatebutton.setOnClickListener(List[position]);
+					ll.addView(updatebutton);
+				}
+			}
+			else{
+				tv1.setText(List[position].text + "\npath:" + List[position].getPath());
+				if(ll.findViewById(3) instanceof Button){
+					ll.removeView(ll.findViewById(3));;
+				}
+			}
 			Button bt1 = (Button) convertView.findViewById(2).findViewById(0);
 		    if(List[position].installed){
 		    	bt1.setText("uninstall");;

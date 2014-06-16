@@ -27,7 +27,7 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 	private Handler handler = new Handler();
 	private URL url;
 	public static String[] tmp = new String[]{"terminal.apk", "busybox", "libc.tar.gz", "java.tar.gz", "awt.tar.gz"};
-	public static String[] arm = new String[]{null, "http://borcteam.bplaced.net/Daten/java/arm/busybox", "http://borcteam.bplaced.net/Daten/java/arm/libc.tar.gz", "http://borcteam.bplaced.net/Daten/java/arm/java.tar.gz"};
+	public static String[] arm = new String[]{null, "http://borcteam.bplaced.net/Daten/java/arm/busybox", "http://borcteam.bplaced.net/Daten/java/arm/libc.tar.gz", "http://borcteam.bplaced.net/Daten/java/arm/java.tar.gz", null};
 	
 	public Install(CheckPoint check){
 		mcheck = check;
@@ -139,13 +139,13 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 				writer.close();
 				chmod(new File("/data/data/julianwi.javainstaller/install.sh"), 0755);
 				String runmode = MainActivity.context.getSharedPreferences("julianwi.javainstaller_preferences", 1).getString("runmode", "auto");
-				if(runmode=="Run Activity" || (runmode=="auto"&&mcheck.getPath().startsWith("/data/data/julianwi.javainstaller"))){
+				if(runmode.equals("Run Activity") || (runmode.equals("auto")&&mcheck.getPath().startsWith("/data/data/julianwi.javainstaller"))){
 					try{
-					Intent intent = new Intent(MainActivity.context, RunActivity.class);
-					Bundle b = new Bundle();
-					b.putBoolean("install", true);
-					intent.putExtras(b);
-					MainActivity.context.startActivity(intent);
+						Intent intent = new Intent(MainActivity.context, RunActivity.class);
+						Bundle b = new Bundle();
+						b.putBoolean("install", true);
+						intent.putExtras(b);
+						MainActivity.context.startActivity(intent);
 					} catch(Exception e){
 						e.printStackTrace();
 						new Error("error", e.toString());
