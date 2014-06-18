@@ -166,9 +166,23 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 		case 0:
 			if(resultCode==RESULT_OK){
 				String FilePath = data.getData().getPath();
-				Intent intent = new Intent(MainActivity.context, RunActivity.class);
-				intent.setDataAndType(Uri.parse(FilePath), "application/java-archive");
-			    MainActivity.context.startActivity(intent);
+				if(getSharedPreferences("julianwi.javainstaller_preferences", 1).getString("runmode2", "Run Activity").equals("Run Activity")){
+					Intent intent = new Intent(MainActivity.context, RunActivity.class);
+					intent.setDataAndType(Uri.parse(FilePath), "application/java-archive");
+				    MainActivity.context.startActivity(intent);
+				}
+				else{
+					String javapath = sharedP.getString("path3", "");
+					Intent i = new Intent("jackpal.androidterm.RUN_SCRIPT");
+					i.addCategory(Intent.CATEGORY_DEFAULT);
+					if(MainActivity.context.getSharedPreferences("julianwi.javainstaller_preferences", 1).getString("rootmode2", "off").equals("on")){
+						i.putExtra("jackpal.androidterm.iInitialCommand", "su\n"+javapath+"/java -jar "+FilePath);
+					}
+					else{
+						i.putExtra("jackpal.androidterm.iInitialCommand", javapath+"/java -jar "+FilePath);
+					}
+					startActivity(i);
+				}
 			}
 		}
 	}

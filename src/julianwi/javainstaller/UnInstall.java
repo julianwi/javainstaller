@@ -38,7 +38,8 @@ public class UnInstall {
 				writer.write("exit");
 				writer.close();
 				Install.chmod(new File("/data/data/julianwi.javainstaller/install.sh"), 0755);
-				if(mcheck.getPath().startsWith("/data/data/julianwi.javainstaller")){
+				String runmode = MainActivity.context.getSharedPreferences("julianwi.javainstaller_preferences", 1).getString("runmode", "auto");
+				if(runmode.equals("Run Activity") || (runmode.equals("auto")&&mcheck.getPath().startsWith("/data/data/julianwi.javainstaller"))){
 					Intent intent = new Intent(MainActivity.context, RunActivity.class);
 					Bundle b = new Bundle();
 					b.putBoolean("install", true);
@@ -48,7 +49,12 @@ public class UnInstall {
 				else{
 					Intent i = new Intent("jackpal.androidterm.RUN_SCRIPT");
 					i.addCategory(Intent.CATEGORY_DEFAULT);
-					i.putExtra("jackpal.androidterm.iInitialCommand", "sh /data/data/julianwi.javainstaller/install.sh\n$bbdir sleep 5\nexit");
+					if(MainActivity.context.getSharedPreferences("julianwi.javainstaller_preferences", 1).getString("rootmode", "off").equals("on")){
+						i.putExtra("jackpal.androidterm.iInitialCommand", "su\nsh /data/data/julianwi.javainstaller/install.sh");
+					}
+					else{
+						i.putExtra("jackpal.androidterm.iInitialCommand", "sh /data/data/julianwi.javainstaller/install.sh");
+					}
 					MainActivity.context.startActivity(i);
 				}
 			}

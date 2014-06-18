@@ -16,7 +16,7 @@ public class PathReceiver extends BroadcastReceiver {
 			String javapath = context.getSharedPreferences("settings", 1).getString("path"+3, "");
 			System.out.println(pref);
 			System.out.println(new Checkforfile().checkfile(javapath));
-			if (pref=="on" || (pref=="if java is installed" && new Checkforfile().checkfile(javapath))){
+			if (pref.equals("on") || (pref.equals("if java is installed") && new Checkforfile().checkfile(javapath))){
 				Bundle result = getResultExtras(true);
 				String path = context.getSharedPreferences("julianwi.javainstaller_preferences", 1).getString("broadcastpath", "%javapath%");
 				System.out.println("path: " + path);

@@ -32,8 +32,8 @@ public class RunActivity extends Activity {
 			SharedPreferences settings = MainActivity.context.getSharedPreferences("julianwi.javainstaller_preferences", 1);
 			ProcessBuilder execBuild;
 			if(b != null && (Boolean)b.get("install")==true){
-				if(settings.getString("rootmode", "off") == "on"){
-					exec = Runtime.getRuntime().exec("/data/data/julianwi.javainstaller/bin/execpty /system/bin/su -c \"sh /data/data/julianwi.javainstaller/install.sh\"");
+				if(settings.getString("rootmode", "off").equals("on")){
+					exec = Runtime.getRuntime().exec(new String[]{"/data/data/julianwi.javainstaller/bin/execpty", "/system/bin/su", "-c", "sh /data/data/julianwi.javainstaller/install.sh"});
 				}
 				else{
 					exec = Runtime.getRuntime().exec("/data/data/julianwi.javainstaller/bin/execpty /system/bin/sh /data/data/julianwi.javainstaller/install.sh");
@@ -42,9 +42,9 @@ public class RunActivity extends Activity {
 			}
 			else{
 				String javapath = getSharedPreferences("settings", 1).getString("path3", "");
-				if(settings.getString("rootmode2", "off") == "on"){
+				if(settings.getString("rootmode2", "off").equals("on")){
 					//exec = Runtime.getRuntime().exec("/data/data/julianwi.javainstaller/bin/execpty /system/bin/su -c \"" + javapath+"/java -jar "+ getIntent().getDataString() + "\"");
-					exec = Runtime.getRuntime().exec("/data/data/julianwi.javainstaller/bin/execpty", new String[]{"/system/bin/su", "-c", javapath+"/java -jar "+getIntent().getDataString()});
+					exec = Runtime.getRuntime().exec(new String[]{"/data/data/julianwi.javainstaller/bin/execpty", "/system/bin/su", "-c", javapath+"/java -jar "+getIntent().getDataString()});
 				}
 				else{
 					exec = Runtime.getRuntime().exec("/data/data/julianwi.javainstaller/bin/execpty " + javapath+"/java -jar "+ getIntent().getDataString());

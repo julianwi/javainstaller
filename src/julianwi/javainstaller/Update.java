@@ -34,7 +34,7 @@ public class Update extends Thread{
     		for(int i = 0;i<5;i++){
     			String version = read.readLine();
     			String oldversion = MainActivity.checks[i].getversion();
-    			System.out.println(version+" old: "+oldversion);
+    			//System.out.println(version+" old: "+oldversion);
     			if(oldversion.equals(version)){
     				update[i] = false;
     			}

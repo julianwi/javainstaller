@@ -71,7 +71,7 @@ public class ChecklistAdapter extends BaseAdapter implements OnClickListener {
 			LinearLayout ll = (LinearLayout) convertView.findViewById(2);
 			if(Update.update[position]){
 				tv1.setText(List[position].text + "\npath:" + List[position].getPath()+"\n"+Update.updatetext[position]);
-				System.out.println(ll.findViewById(3));
+				//System.out.println(ll.findViewById(3));
 				if(!(ll.findViewById(3) instanceof Button)){
 					Button updatebutton = new Button(mcontext);
 					updatebutton.setId(3);
