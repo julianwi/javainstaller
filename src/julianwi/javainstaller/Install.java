@@ -65,6 +65,7 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 		mProgressDialog.setProgressStyle(mProgressDialog.STYLE_HORIZONTAL);
 		mProgressDialog.setProgress(0);
 		mProgressDialog.setMax(100);
+		mProgressDialog.setCancelable(false);
 		mProgressDialog.show();
 
 		// execute this when the downloader must be fired
