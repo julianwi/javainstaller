@@ -42,9 +42,13 @@ public class ChecklistAdapter extends BaseAdapter implements OnClickListener {
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		//System.out.println("position: "+position+" length: "+List.length+" convertView: "+convertView);
+		if(convertView != null && convertView.getId()-2 != position){
+			convertView = null;
+		}
 		if(position<List.length){
-			if(convertView == null || convertView instanceof Button){
+			if(convertView == null/* || convertView instanceof Button*/){
 				convertView = new LinearLayout(mcontext);
+				convertView.setId(position+2);
 				((LinearLayout) convertView).setOrientation(LinearLayout.VERTICAL);
 				TextView t1 = new TextView(mcontext);
 				t1.setId(1);
@@ -96,8 +100,9 @@ public class ChecklistAdapter extends BaseAdapter implements OnClickListener {
 		    
 		    return convertView;
 		}
-		if(convertView==null || convertView instanceof LinearLayout){
+		if(convertView==null/* || convertView instanceof LinearLayout*/){
 			convertView = new Button(MainActivity.context);
+			convertView.setId(position);
 			((Button) convertView).setText("run jar file");
 			((Button) convertView).setOnClickListener(this);
 		}
