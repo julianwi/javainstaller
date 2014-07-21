@@ -5,6 +5,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 
 import android.app.ProgressDialog;
 import android.os.Handler;
@@ -26,25 +27,30 @@ public class Download {
 	public void start() {
 		InputStream input = null;
         OutputStream output = null;
-        HttpURLConnection connection = null;
+        URLConnection connection = null;
+        HttpURLConnection httpconnection = null;
 		try {
-            connection = (HttpURLConnection) url.openConnection();
+            connection = url.openConnection();
             connection.connect();
 
-            // expect HTTP 200 OK, so we don't mistakenly save error report
-            // instead of the file
-            if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-            	final String error = "Server returned HTTP " + connection.getResponseCode() + " " + connection.getResponseMessage();
-            	handler.post(new Runnable() {
-					
-					@Override
-					public void run() {
-						new Error("HTTP Error", error);
+            if(connection instanceof HttpURLConnection){
+            	httpconnection = (HttpURLConnection) connection;
+
+	            // expect HTTP 200 OK, so we don't mistakenly save error report
+	            // instead of the file
+	            if (httpconnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
+	            	final String error = "Server returned HTTP " + httpconnection.getResponseCode() + " " + httpconnection.getResponseMessage();
+	            	handler.post(new Runnable() {
 						
-					}
-				});
-            	System.out.println("Server returned HTTP " + connection.getResponseCode()
-                        + " " + connection.getResponseMessage());
+						@Override
+						public void run() {
+							new Error("HTTP Error", error);
+							
+						}
+					});
+	            	System.out.println("Server returned HTTP " + httpconnection.getResponseCode()
+	                        + " " + httpconnection.getResponseMessage());
+	            }
             }
 
             // this will be useful to display download percentage
