@@ -102,7 +102,7 @@ public class ChecklistAdapter extends BaseAdapter implements OnClickListener {
 		}
 		if(convertView==null/* || convertView instanceof LinearLayout*/){
 			convertView = new Button(MainActivity.context);
-			convertView.setId(position);
+			convertView.setId(position+2);
 			((Button) convertView).setText("run jar file");
 			((Button) convertView).setOnClickListener(this);
 		}
