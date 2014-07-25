@@ -23,7 +23,7 @@ public class RunActivity extends Activity {
 	public static Object session;
     private static FileDescriptor pseudoterm;
     public ClassLoader classloader;
-	private Class<?> termexec;
+	private static Class<?> termexec;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +57,9 @@ public class RunActivity extends Activity {
 				}
 			}
 			//create a pty
-			termexec = Class.forName("jackpal.androidterm.Exec", true, classloader);
+			if(termexec == null){
+				termexec = Class.forName("jackpal.androidterm.Exec", true, classloader);
+			}
 			pseudoterm = (FileDescriptor) termexec.getMethod("createSubprocess", new Class[]{String.class, String[].class, String[].class, int[].class}).invoke(null, new Object[]{arguments[0], arguments, new String[]{}, new int[1]});
 	        
 	        //connect the pty's I/O streams to the TermSession.
