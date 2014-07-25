@@ -1,61 +1,68 @@
 package julianwi.javainstaller;
 
+import java.io.FileDescriptor;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.util.DisplayMetrics;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 
 public class RunActivity extends Activity {
 	
 	private View emulatorview;
 	public static Object session;
-    private static Process exec;
+    private static FileDescriptor pseudoterm;
     public ClassLoader classloader;
+	private Class<?> termexec;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		try{
+			System.getProperties().setProperty("java.library.path", System.getProperty("java.library.path")+":/data/data/jackpal.androidterm/lib");
+			
 			String apkfile = getPackageManager().getApplicationInfo("jackpal.androidterm", 0).sourceDir;
 			classloader = new dalvik.system.PathClassLoader(apkfile, ClassLoader.getSystemClassLoader());
+			
 			Bundle b = getIntent().getExtras();
 			//create a new terminal session
 			session = Class.forName("jackpal.androidterm.emulatorview.TermSession", true, classloader).getConstructor().newInstance(new Object[]{});
-			//create a pty
 			SharedPreferences settings = MainActivity.context.getSharedPreferences("julianwi.javainstaller_preferences", 1);
-			ProcessBuilder execBuild;
+			String[] arguments;
 			if(b != null && (Boolean)b.get("install")==true){
 				if(settings.getString("rootmode", "off").equals("on")){
-					exec = Runtime.getRuntime().exec(new String[]{"/data/data/julianwi.javainstaller/bin/execpty", "/system/bin/su", "-c", "sh /data/data/julianwi.javainstaller/install.sh"});
+					arguments = new String[]{"/system/bin/su", "-c", "sh /data/data/julianwi.javainstaller/install.sh"};
 				}
 				else{
-					exec = Runtime.getRuntime().exec("/data/data/julianwi.javainstaller/bin/execpty /system/bin/sh /data/data/julianwi.javainstaller/install.sh");
+					arguments = new String[]{"/system/bin/sh", "/data/data/julianwi.javainstaller/install.sh"};
 				}
-				//execBuild = new ProcessBuilder("/data/data/julianwi.javainstaller/bin/execpty", "/system/bin/sh", "/data/data/julianwi.javainstaller/install.sh");
 			}
 			else{
 				String javapath = getSharedPreferences("settings", 1).getString("path3", "");
 				if(settings.getString("rootmode2", "off").equals("on")){
-					//exec = Runtime.getRuntime().exec("/data/data/julianwi.javainstaller/bin/execpty /system/bin/su -c \"" + javapath+"/java -jar "+ getIntent().getDataString() + "\"");
-					exec = Runtime.getRuntime().exec(new String[]{"/data/data/julianwi.javainstaller/bin/execpty", "/system/bin/su", "-c", javapath+"/java -jar "+getIntent().getDataString()});
+					arguments = new String[]{"/system/bin/su", "-c", javapath+"/java -jar "+getIntent().getDataString()};
 				}
 				else{
-					exec = Runtime.getRuntime().exec("/data/data/julianwi.javainstaller/bin/execpty " + javapath+"/java -jar "+ getIntent().getDataString());
+					arguments = new String[]{javapath+"/java", "-jar", getIntent().getDataString()};
 				}
-				//execBuild = new ProcessBuilder("/data/data/julianwi.javainstaller/bin/execpty", javapath+"/java", "-jar", getIntent().getDataString());
 			}
-	        /*execBuild.redirectErrorStream(true);
-	        exec = execBuild.start();*/
+			//create a pty
+			termexec = Class.forName("jackpal.androidterm.Exec", true, classloader);
+			pseudoterm = (FileDescriptor) termexec.getMethod("createSubprocess", new Class[]{String.class, String[].class, String[].class, int[].class}).invoke(null, new Object[]{arguments[0], arguments, new String[]{}, new int[1]});
+	        
 	        //connect the pty's I/O streams to the TermSession.
-	        session.getClass().getMethod("setTermIn", InputStream.class).invoke(session, new Object[]{exec.getInputStream()});
-	        session.getClass().getMethod("setTermOut", OutputStream.class).invoke(session, new Object[]{exec.getOutputStream()});
+	        session.getClass().getMethod("setTermIn", InputStream.class).invoke(session, new Object[]{new FileInputStream(pseudoterm)});
+	        session.getClass().getMethod("setTermOut", OutputStream.class).invoke(session, new Object[]{new FileOutputStream(pseudoterm)});
 	        //create the EmulatorView
 			DisplayMetrics metrics = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -92,11 +99,22 @@ public class RunActivity extends Activity {
 	public void onDestroy(){
 		super.onDestroy();
 		try{
-			exec.destroy();
+			termexec.getMethod("close", new Class[]{FileDescriptor.class}).invoke(null, new Object[]{pseudoterm});
 		} catch(Exception e){
 			e.printStackTrace();
 			new Error("error", e.toString(), this);
 		}
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+	    switch (item.getItemId()) {
+	        case 0:
+	        	Intent intent = new Intent(MainActivity.context, SettingsActivity.class);
+			    MainActivity.context.startActivity(intent);
+	            return true;
+	     }
+		return false;
 	}
 
 }
