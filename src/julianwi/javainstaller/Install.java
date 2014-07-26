@@ -121,7 +121,7 @@ public class Install implements OnClickListener, Runnable, OnCancelListener{
 					writer.write("$bbdir mkdir -p "+MainActivity.checks[3].getPath()+"/lib\n$bbdir chmod 0755 "+MainActivity.checks[3].getPath()+"/lib\ncd "+MainActivity.checks[3].getPath()+"/lib\n");
 					writer.write("$bbdir tar -xvzpf /data/data/julianwi.javainstaller/"+tmp[mcheck.id]+"\n");
 					writer.write("$bbdir chmod 0755 *\n");
-					writer.write("am start -a android.intent.action.VIEW -d file://"+MainActivity.checks[3].getPath()+"/lib/awtonandroid.apk -t application/vnd.android.package-archive\n");
+					writer.write("am start --user 0 -a android.intent.action.VIEW -d file://"+MainActivity.checks[3].getPath()+"/lib/awtonandroid.apk -t application/vnd.android.package-archive\n");
 				}
 				if(mcheck.id == 3 || mcheck.id == 4){
 					writer.write("echo \"#!/system/bin/sh\" > "+MainActivity.checks[3].getPath()+"/java\n"

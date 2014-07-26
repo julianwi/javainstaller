@@ -32,7 +32,7 @@ public class UnInstall {
 					writer.write("$bbdir rm -r "+mcheck.getPath()+"\n");
 				}
 				if(mcheck.id == 4){
-					writer.write("am start -a android.intent.action.DELETE -d package:julianwi.awtpeer\n");
+					writer.write("am start --user 0 -a android.intent.action.DELETE -d package:julianwi.awtpeer\n");
 				}
 				writer.write("echo uninstallation complete\n");
 				writer.write("exit");
