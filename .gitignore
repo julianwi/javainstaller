@@ -4,3 +4,4 @@ obj/
 libs/
 .directory
 local.properties
+.externalToolBuilders

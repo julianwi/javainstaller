@@ -76,32 +76,6 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
         lv.setAdapter(listenAdapter);
         setContentView(lv);
         ma = this;
-        
-        File binDir = new File("/data/data/julianwi.javainstaller/bin");
-        if (!binDir.exists()) {
-            try {
-                binDir.mkdir();
-                Install.chmod(binDir, 0755);
-            } catch (Exception e) {
-            	e.printStackTrace();
-            	new Error("error", e.toString());
-            }
-        }
-        File binary = new File(binDir, "execpty");
-        try {
-            InputStream src = new FileInputStream(new File("/data/data/julianwi.javainstaller/lib/libexecpty.so"));
-            FileOutputStream dst = new FileOutputStream(binary);
-            byte[] buffer = new byte[4096];
-            int bytesRead = 0;
-            while ((bytesRead = src.read(buffer)) >= 0) {
-                dst.write(buffer, 0, bytesRead);
-            }
-            dst.close();
-            Install.chmod(binary, 0755);
-        } catch (Exception e) {
-        	e.printStackTrace();
-        	new Error("error", e.toString());
-        }
 	}
 	
 	@Override

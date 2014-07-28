@@ -1,5 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<project name="rename">
-    <move file="libs/x86/execpty" tofile="libs/x86/libexecpty.so" failonerror="false"/>
-    <move file="libs/armeabi/execpty" tofile="libs/armeabi/libexecpty.so" failonerror="false"/>
-</project>
