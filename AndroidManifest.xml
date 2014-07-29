@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="julianwi.javainstaller"
-    android:versionCode="3"
-    android:versionName="0.3" >
+    android:versionCode="4"
+    android:versionName="0.3.1" >
 
     <uses-sdk
         android:minSdkVersion="1"
@@ -15,6 +15,8 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" >
     </uses-permission>
     <uses-permission android:name="jackpal.androidterm.permission.APPEND_TO_PATH" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_SUPERUSER" >
     </uses-permission>
 
     <application
