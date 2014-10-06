@@ -5,7 +5,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 
-public class Error {
+public class Error implements Runnable{
+	
+	Exception e;
+	Context ctx;
+	
 	public Error(String title, String message){
 		new AlertDialog.Builder(MainActivity.context)
 	    .setTitle(title)
@@ -30,5 +34,15 @@ public class Error {
 			}
 		})
 		.show();
+	}
+	
+	public Error(Exception e, Context c){
+		this.e = e;
+		ctx = c;
+	}
+
+	@Override
+	public void run() {
+		new Error("error", e.toString(), ctx);
 	}
 }

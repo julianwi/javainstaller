@@ -50,6 +50,11 @@
             android:name=".SettingsActivity"
             android:label="Settings">
         </activity>
+        <activity 
+            android:name=".InstallActivity"
+            android:label="Install"
+            android:configChanges="orientation|screenSize">
+        </activity>
         <receiver android:name=".PathReceiver">
             <intent-filter>
                 <action android:name="jackpal.androidterm.broadcast.APPEND_TO_PATH" />

@@ -3,16 +3,17 @@ package julianwi.javainstaller;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager.NameNotFoundException;
+import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -25,6 +26,7 @@ public class CheckPoint implements OnClickListener,
 	public Boolean installed;
 	public int id;
 	public String source;
+	private Boolean src;
 	
 	public CheckPoint(String Text, String Source, int Id){
 		text = Text;
@@ -39,10 +41,11 @@ public class CheckPoint implements OnClickListener,
 	}
 	
 	public String getPath(){
-		if(id == 4){
-			return MainActivity.checks[3].getPath()+"/lib/awtpeer.zip";
-		}
 		return MainActivity.sharedP.getString("path"+id, "");
+	}
+	
+	public String getSource(){
+		return MainActivity.sharedP.getString("source"+id, "");
 	}
 
 	@Override
@@ -50,7 +53,12 @@ public class CheckPoint implements OnClickListener,
 		AlertDialog ad = (AlertDialog) dialog;
 		String value = ((EditText) ad.findViewById(1)).getText().toString();
 		Editor edit = MainActivity.sharedP.edit();
-		edit.putString("path"+id, value);
+		if(src==false){
+			edit.putString("path"+id, value);
+		}
+		else{
+			edit.putString("source"+id, value);
+		}
 		edit.commit();
 	}
 
@@ -59,32 +67,47 @@ public class CheckPoint implements OnClickListener,
 		switch (v.getId()) {
 		case 0:
 			if(((Button) v).getText() == "install"){
-				new Install(this);
+				Intent intent = new Intent(MainActivity.ma, InstallActivity.class);
+				Bundle b = new Bundle();
+				b.putInt("packages", 1 << id+1);
+				intent.putExtras(b);
+				MainActivity.ma.startActivity(intent);
+				break;
+				//new Install(this);
 			}
 			else{
 				new UnInstall(this);
 			}
 			break;
 		case 1:
+			src=false;
+			showalert();
+			break;
+		case 2:
+			src=true;
 			showalert();
 			break;
 		case 3:
 			new Install(this);
-
-		default:
 			break;
 		}
 	}
 	
 	public void showalert() {
 		AlertDialog.Builder alert = new AlertDialog.Builder(MainActivity.context);
-
-		alert.setMessage("path to install");
+		alert.setTitle(text);
 
 		// Set an EditText view to get user input 
 		final EditText input = new EditText(MainActivity.context);
 		input.setId(1);
-		input.setText(getPath());
+		if(src==false){
+			alert.setMessage("path to install");
+			input.setText(getPath());
+		}
+		else{
+			alert.setMessage("source file");
+			input.setText(getSource());
+		}
 		alert.setView(input);
 
 		alert.setPositiveButton("save", this);

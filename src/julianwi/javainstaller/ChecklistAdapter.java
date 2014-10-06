@@ -1,15 +1,17 @@
 package julianwi.javainstaller;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-public class ChecklistAdapter extends BaseAdapter implements OnClickListener {
+public class ChecklistAdapter extends BaseAdapter implements OnItemClickListener {
 	
 	public CheckPoint[] List;
 	public Context mcontext;
@@ -23,7 +25,7 @@ public class ChecklistAdapter extends BaseAdapter implements OnClickListener {
 
 	@Override
 	public int getCount() {
-		return List.length+1;
+		return List.length;
 	}
 
 	@Override
@@ -41,79 +43,45 @@ public class ChecklistAdapter extends BaseAdapter implements OnClickListener {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		//System.out.println("position: "+position+" length: "+List.length+" convertView: "+convertView);
-		if(convertView != null && convertView.getId()-2 != position){
-			convertView = null;
+		TextView tv = (TextView) convertView;
+		if(tv == null){
+			tv = new TextView(mcontext);
 		}
-		if(position<List.length){
-			if(convertView == null/* || convertView instanceof Button*/){
-				convertView = new LinearLayout(mcontext);
-				convertView.setId(position+2);
-				((LinearLayout) convertView).setOrientation(LinearLayout.VERTICAL);
-				TextView t1 = new TextView(mcontext);
-				t1.setId(1);
-			    ((LinearLayout) convertView).addView(t1);
-			    LinearLayout ll = new LinearLayout(mcontext);
-			    ll.setId(2);
-			    ll.setOrientation(LinearLayout.HORIZONTAL);
-			    Button b1 = new Button(mcontext);
-			    b1.setId(0);
-			    b1.setOnClickListener(List[position]);
-			    Button b2 = new Button(mcontext);
-			    b2.setText("change path");
-			    b2.setId(1);
-			    //disable change path for terminal and awt
-			    if(position == 0 || position == 4){
-			    	b2.setEnabled(false);
-			    }
-			    b2.setOnClickListener(List[position]);
-				ll.addView(b1);
-				ll.addView(b2);
-				((LinearLayout) convertView).addView(ll);
-			}
-			TextView tv1 = (TextView) convertView.findViewById(1);
-			LinearLayout ll = (LinearLayout) convertView.findViewById(2);
-			if(Update.update[position]){
-				tv1.setText(List[position].text + "\npath:" + List[position].getPath()+"\n"+Update.updatetext[position]);
-				//System.out.println(ll.findViewById(3));
-				if(!(ll.findViewById(3) instanceof Button)){
-					Button updatebutton = new Button(mcontext);
-					updatebutton.setId(3);
-					updatebutton.setText("update");
-					updatebutton.setOnClickListener(List[position]);
-					ll.addView(updatebutton);
-				}
-			}
-			else{
-				tv1.setText(List[position].text + "\npath:" + List[position].getPath());
-				if(ll.findViewById(3) instanceof Button){
-					ll.removeView(ll.findViewById(3));;
-				}
-			}
-			Button bt1 = (Button) convertView.findViewById(2).findViewById(0);
-		    if(List[position].installed){
-		    	bt1.setText("uninstall");;
-		    }
-		    else{
-		    	bt1.setText("install");
-		    }
-		    
-		    return convertView;
+		if(List[position].installed){
+			tv.setText(Html.fromHtml("<h2>(installed) "+List[position].text+"</h2>"+List[position].source));
 		}
-		if(convertView==null/* || convertView instanceof LinearLayout*/){
-			convertView = new Button(MainActivity.context);
-			convertView.setId(position+2);
-			((Button) convertView).setText("run jar file");
-			((Button) convertView).setOnClickListener(this);
+		else{
+			tv.setText(Html.fromHtml("<h2>"+List[position].text+"</h2>"+List[position].source));
 		}
-		return convertView;
+		return tv;
 	}
 
 	@Override
-	public void onClick(View v) {
-		ma.choosefile("application/java-archive");
-		/*Intent intent = new Intent(MainActivity.context, RunActivity.class);
-	    MainActivity.context.startActivity(intent);*/
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		LinearLayout ll = new LinearLayout(mcontext);
+		ll.setOrientation(LinearLayout.VERTICAL);
+		TextView tv = new TextView(mcontext);
+		tv.setText(Html.fromHtml("<h2>"+List[position].text+"</h2>"+List[position].source+"<br>"+"path:"+List[position].getPath()+"<br>"+"source:"+List[position].getSource()));
+		LinearLayout ll2 = new LinearLayout(mcontext);
+		Button b = new Button(mcontext);
+		b.setText("change path");
+		b.setId(1);
+		b.setOnClickListener(List[position]);
+		Button b2 = new Button(mcontext);
+		b2.setText("change source");
+		b2.setId(2);
+		b2.setOnClickListener(List[position]);
+		ll2.addView(b);
+		ll2.addView(b2);
+		Button b1 = new Button(mcontext);
+		b1.setText("install");
+		b1.setId(0);
+		b1.setOnClickListener(List[position]);
+		ll.addView(tv);
+		ll.addView(ll2);
+		ll.addView(b1);
+		ma.setContentView(ll);
+		ma.state = 2;
 	}
 
 }

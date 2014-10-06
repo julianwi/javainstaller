@@ -8,23 +8,30 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.Handler;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
-public class Download {
+public class Download implements Runnable {
 	
-	private ProgressDialog progress;
+	private ProgressBar progress;
 	private URL url;
 	private Handler handler;
 	private String path;
+	private TextView tv;
+	private Context ctx;
 	
-	public Download(ProgressDialog Progress, URL url, Handler Handler, String destpath){
+	public Download(ProgressBar Progress, TextView tv, URL url, Handler Handler, String destpath, Context c){
 		progress = Progress;
 		this.url = url;
 		handler = Handler;
 		path = destpath;
+		this.tv = tv;
+		ctx = c;
 	}
 
-	public void start() {
+	public void run() {
 		InputStream input = null;
         OutputStream output = null;
         URLConnection connection = null;
@@ -67,21 +74,24 @@ public class Download {
             while ((count = input.read(data, 0, 1024)) != -1) {
             	total += count;
             	final int percent = (int) (total * 100 / fileLength);
+            	final String status = total/1024+"/"+fileLength/1024+"kb  "+percent+"/100%";
             	handler.post(new Runnable() {
 					@Override
 					public void run() {
 						progress.setProgress(percent);
+						tv.setText(status);
 					}
 				});
                 output.write(data, 0, count);
             }
             input.close();
             output.close();
-			progress.dismiss();
+			//progress.dismiss();
         } catch(Exception e){
         	e.printStackTrace();
-        	progress.dismiss();
-        	final String error = e.getMessage();
+        	handler.post(new Error(e, ctx));
+        	//progress.dismiss();
+        	/*final String error = e.getMessage();
         	handler.post(new Runnable() {
 				
 				@Override
@@ -89,7 +99,7 @@ public class Download {
 					new Error("Error", error);
 					
 				}
-			});
+			});*/
         }
 	}
 }

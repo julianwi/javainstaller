@@ -33,29 +33,36 @@ import android.content.pm.PackageManager.NameNotFoundException;
 import android.content.res.Resources;
 import android.content.res.XmlResourceParser;
 import android.graphics.drawable.Drawable;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
 public class MainActivity extends Activity implements OnSharedPreferenceChangeListener {
 	
-	private ListView lv;
 	public static CheckPoint[] checks = new CheckPoint[]{
-			new CheckPoint("install Terminal Emulator","http://borcteam.bplaced.net/Daten/java/jackpal.androidterm.apk" ,0),
-			new CheckPoint("install busybox","http://borcteam.bplaced.net/Daten/java/busybox" ,1),
-			new CheckPoint("install gnu libc","http://borcteam.bplaced.net/Daten/java/libc.tar.gz" ,2),
-			new CheckPoint("install precompiled versions of jamvm and gnu classpath","http://borcteam.bplaced.net/Daten/java/java.tar.gz" ,3),
-			new CheckPoint("install awtonandroid libraries","http://borcteam.bplaced.net/Daten/java/awt.tar.gz" ,4)
+			new CheckPoint("Android Terminal Emulator","A VT-100 terminal emulator for the Android OS" ,0),
+			new CheckPoint("busybox","BusyBox combines tiny versions of many common UNIX utilities into a single small executable" ,1),
+			new CheckPoint("gnu libc","The GNU C Library is used as the C library in the GNU systems and most systems with the Linux kernel" ,2),
+			new CheckPoint("zlib", "A Massively Spiffy Yet Delicately Unobtrusive Compression Library", 3),
+			new CheckPoint("libffi", "A portable foreign-function interface library", 4),
+			new CheckPoint("jamvm","JamVM is a new Java Virtual Machine conforming to the JVM specification edition 2 (blue book)" ,5),
+			new CheckPoint("gnu classpath","free implementation of the standard class library for the Java programming language" ,6),
+			new CheckPoint("freetype", "FreeType is a freely available software library to render fonts", 7),
+			new CheckPoint("awtonandroid graphic libraries","java awt graphic libraries for android" ,8)
 	};
 	//private String[] checklist = new String[]{"install busybox", "install Terminal Emulator", "install gnu libc", "install precompiled versions of jamvm and gnu classpath"};
 	//private Boolean[] checklist2 = new Boolean[]{false, false, false, false};
 	//private String[] checklist3 = new String[]{"/data/data/jackpal.androidterm/bin/busybox", "/data/app/jackpal.androidterm-1.apk", "", ""};
-	private ChecklistAdapter listenAdapter;
+	private ListView lv;
+	public ListView lv2;
+	public ChecklistAdapter listenAdapter;
 	public static SharedPreferences sharedP;
 	public static Context context;
 	public static Context termcontext;
 	//public OnClickListener onclick = new Install(this ,checklist);
 	public static MainActivity ma;
+	public int state = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,8 +79,9 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 		//Checkforfile cff = new Checkforfile();
 		//cff.scan(checks);
 		lv = new ListView(this);
-        listenAdapter = new ChecklistAdapter(this, checks);
-        lv.setAdapter(listenAdapter);
+        //listenAdapter = new ChecklistAdapter(this, checks);
+        //lv.setAdapter(listenAdapter);
+		lv.setAdapter(new MainList(this));
         setContentView(lv);
         ma = this;
 	}
@@ -159,6 +167,22 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 				}
 			}
 		}
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event)  {
+	    if (keyCode == KeyEvent.KEYCODE_BACK && event.getRepeatCount() == 0) {
+	    	if(state == 1){
+				setContentView(lv);
+	    	}else if(state == 2){
+	    		setContentView(lv2);
+	    	}else{
+	    		return super.onKeyDown(keyCode, event);
+	    	}
+	    	state = state-1;
+	        return true;
+	    }
+	    return super.onKeyDown(keyCode, event);
 	}
 
 }
