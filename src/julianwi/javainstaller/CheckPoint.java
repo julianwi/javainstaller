@@ -66,18 +66,18 @@ public class CheckPoint implements OnClickListener,
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case 0:
+			Intent intent = new Intent(MainActivity.ma, InstallActivity.class);
+			Bundle b = new Bundle();
 			if(((Button) v).getText() == "install"){
-				Intent intent = new Intent(MainActivity.ma, InstallActivity.class);
-				Bundle b = new Bundle();
 				b.putInt("packages", 1 << id+1);
-				intent.putExtras(b);
-				MainActivity.ma.startActivity(intent);
-				break;
 				//new Install(this);
 			}
 			else{
-				new UnInstall(this);
+				b.putInt("packages", (1 << id+1)+1);
+				//new UnInstall(this);
 			}
+			intent.putExtras(b);
+			MainActivity.ma.startActivity(intent);
 			break;
 		case 1:
 			src=false;

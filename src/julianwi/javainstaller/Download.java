@@ -47,14 +47,14 @@ public class Download implements Runnable {
 	            // instead of the file
 	            if (httpconnection.getResponseCode() != HttpURLConnection.HTTP_OK) {
 	            	final String error = "Server returned HTTP " + httpconnection.getResponseCode() + " " + httpconnection.getResponseMessage();
-	            	handler.post(new Runnable() {
+	            	handler.post(new Error(new Exception(error), ctx)/*new Runnable() {
 						
 						@Override
 						public void run() {
 							new Error("HTTP Error", error);
 							
 						}
-					});
+					}*/);
 	            	System.out.println("Server returned HTTP " + httpconnection.getResponseCode()
 	                        + " " + httpconnection.getResponseMessage());
 	            }

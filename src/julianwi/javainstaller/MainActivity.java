@@ -36,6 +36,7 @@ import android.graphics.drawable.Drawable;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 public class MainActivity extends Activity implements OnSharedPreferenceChangeListener {
@@ -91,6 +92,9 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 		Checkforfile cff = new Checkforfile();
 		cff.scan(checks);
 		listenAdapter.notifyDataSetChanged();
+		lv.setAdapter(new MainList(this));
+		if(state == 2)listenAdapter.update();
+		if(state == 0)setContentView(lv);
 		super.onResume();
 		if(checkCallingOrSelfPermission("jackpal.androidterm.permission.RUN_SCRIPT")!=PackageManager.PERMISSION_GRANTED){
 			try {

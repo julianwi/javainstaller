@@ -40,7 +40,7 @@ public class MainList extends BaseAdapter implements OnClickListener {
 			b.setOnClickListener(this);
 		}
 		switch (position){
-			case 0:	b.setText("install java runtime comandline only");
+			case 0:	b.setText((packages()!=0)?"install java runtime comandline only":"uninstall java runtime");
 			break;
 			case 1: b.setText("install java runtime with awt graphic librarys");
 			break;
@@ -57,10 +57,8 @@ public class MainList extends BaseAdapter implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case 0:
-			int packages = 0;
-			for (int i = 0; i < 7; i++) {
-				packages = packages+(((MainActivity.checks[i].installed)?0:1)<<(i+1));
-			}
+			int packages = packages();
+			if(packages==0)packages=255;
 			Intent intent = new Intent(ma, InstallActivity.class);
 			Bundle b = new Bundle();
 			b.putInt("packages", packages);
@@ -79,6 +77,14 @@ public class MainList extends BaseAdapter implements OnClickListener {
 			ma.choosefile("application/java-archive");
 			break;
 		}
+	}
+	
+	public int packages(){
+		int packages = 0;
+		for (int i = 0; i < 7; i++) {
+			packages = packages+(((MainActivity.checks[i].installed)?0:1)<<(i+1));
+		}
+		return packages;
 	}
 
 }

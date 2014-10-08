@@ -16,6 +16,7 @@ public class ChecklistAdapter extends BaseAdapter implements OnItemClickListener
 	public CheckPoint[] List;
 	public Context mcontext;
 	public MainActivity ma;
+	private int id;
 	
 	public ChecklistAdapter(MainActivity ma, CheckPoint[] items) {
 		mcontext = ma;
@@ -58,6 +59,7 @@ public class ChecklistAdapter extends BaseAdapter implements OnItemClickListener
 
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		this.id = position;
 		LinearLayout ll = new LinearLayout(mcontext);
 		ll.setOrientation(LinearLayout.VERTICAL);
 		TextView tv = new TextView(mcontext);
@@ -74,7 +76,7 @@ public class ChecklistAdapter extends BaseAdapter implements OnItemClickListener
 		ll2.addView(b);
 		ll2.addView(b2);
 		Button b1 = new Button(mcontext);
-		b1.setText("install");
+		b1.setText((List[position].installed)?"uninstall":"install");
 		b1.setId(0);
 		b1.setOnClickListener(List[position]);
 		ll.addView(tv);
@@ -82,6 +84,10 @@ public class ChecklistAdapter extends BaseAdapter implements OnItemClickListener
 		ll.addView(b1);
 		ma.setContentView(ll);
 		ma.state = 2;
+	}
+	
+	public void update(){
+		onItemClick(null, null, id, 0);
 	}
 
 }

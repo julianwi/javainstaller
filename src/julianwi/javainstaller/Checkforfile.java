@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.io.Writer;
+import java.util.ArrayList;
 
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
@@ -30,19 +31,14 @@ public class Checkforfile {
 		 if(!MainActivity.sharedP.contains("path4")){
 			 edit.putString("path0", "/data/app/");
 			 edit.putString("source0", "http://borcteam.bplaced.net/files/java/androidterm.apk");
-			 edit.putString("path1", "/data/data/jackpal.androidterm/bin/");
+			 edit.putString("path1", "/data/data/jackpal.androidterm/bin");
 			 edit.putString("source1", "http://borcteam.bplaced.net/files/java/busybox");
 			 for(int i=2;i<=8;i++){
-				 edit.putString("path"+i, "/data/data/julianwi.javainstaller/javafiles/");
+				 edit.putString("path"+i, "/data/data/julianwi.javainstaller/javafiles");
 				 edit.putString("source"+i, "http://borcteam.bplaced.net/files/java/"+file[i]);
 			 }
 			 edit.commit();
 		 }
-		 try {
-			writejava();
-		} catch (Exception e1) {
-			e1.printStackTrace();
-		}
 		 if(checkpackage("jackpal.androidterm")){
 			 checks[0].installed = true;
 			 try {
@@ -113,13 +109,5 @@ public class Checkforfile {
 	        return false;
 	    }
 	}
-	
-	public void writejava() throws Exception{
-		Writer writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/data/data/julianwi.javainstaller/java"), "utf-8"));
-		writer.write("#!/system/bin/sh\n");
-		writer.write("export LD_LIBRARY_PATH=/data/data/julianwi.javainstaller/javafiles\n");
-		writer.write("exec /data/data/julianwi.javainstaller/javafiles/ld-linux.so.2 /data/data/julianwi.javainstaller/javafiles/jamvm -Xbootclasspath:/data/data/julianwi.javainstaller/javafiles/classes.zip:/data/data/julianwi.javainstaller/javafiles/glibj.zip:/data/data/julianwi.javainstaller/javafiles/awtpeer.zip -Dawt.toolkit=julianwi.awtpeer.AndroidToolkit $@\n");
-		writer.close();
-		InstallActivity.chmod(new File("/data/data/julianwi.javainstaller/java"), 0755);
-	}
+
 }
