@@ -49,7 +49,7 @@ public class ChecklistAdapter extends BaseAdapter implements OnItemClickListener
 			tv = new TextView(mcontext);
 		}
 		if(List[position].installed){
-			tv.setText(Html.fromHtml("<h2>(installed) "+List[position].text+"</h2>"+List[position].source));
+			tv.setText(Html.fromHtml("<h2>"+((Update.update[position])?"(updateable) ":"(installed) ")+List[position].text+"</h2>"+List[position].source));
 		}
 		else{
 			tv.setText(Html.fromHtml("<h2>"+List[position].text+"</h2>"+List[position].source));
@@ -75,13 +75,28 @@ public class ChecklistAdapter extends BaseAdapter implements OnItemClickListener
 		b2.setOnClickListener(List[position]);
 		ll2.addView(b);
 		ll2.addView(b2);
+		ll.addView(tv);
+		ll.addView(ll2);
 		Button b1 = new Button(mcontext);
 		b1.setText((List[position].installed)?"uninstall":"install");
 		b1.setId(0);
 		b1.setOnClickListener(List[position]);
-		ll.addView(tv);
-		ll.addView(ll2);
-		ll.addView(b1);
+		if(Update.update[position]&&List[position].installed){
+			TextView tv2 = new TextView(mcontext);
+			tv2.setText(Update.updatetext[position]);
+			LinearLayout ll3 = new LinearLayout(mcontext);
+			Button b3 = new Button(mcontext);
+			b3.setText("update");
+			b3.setId(3);
+			b3.setOnClickListener(List[position]);
+			ll3.addView(b1);
+			ll3.addView(b3);
+			ll.addView(tv2);
+			ll.addView(ll3);
+		}
+		else{
+			ll.addView(b1);
+		}
 		ma.setContentView(ll);
 		ma.state = 2;
 	}

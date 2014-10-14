@@ -44,7 +44,7 @@ public class MainList extends BaseAdapter implements OnClickListener {
 			break;
 			case 1: b.setText("install java runtime with awt graphic librarys");
 			break;
-			case 2: b.setText("view package list");
+			case 2: b.setText("view package list"+((Update.udate)?" (updates available)":""));
 			break;
 			case 3: b.setText("run jar file");
 			break;

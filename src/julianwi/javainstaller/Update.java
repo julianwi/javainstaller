@@ -11,12 +11,13 @@ import android.widget.Toast;
 
 public class Update extends Thread{
 	
-	public static boolean update[] = {false, false, false, false, false};
-	public static String updatetext[] = new String[5];
+	public static boolean update[] = {false, false, false, false, false, false, false};
+	public static boolean udate = false;
+	public static String updatetext[] = new String[7];
 	private ChecklistAdapter listadapter;
-	private Activity activity;
+	private MainActivity activity;
 	
-	public Update(ChecklistAdapter la, Activity mactivity){
+	public Update(ChecklistAdapter la, MainActivity mactivity){
 		listadapter = la;
 		activity = mactivity;
 	}
@@ -24,17 +25,16 @@ public class Update extends Thread{
 	@Override
 	public void run() {
 		try {
-			URL url = new URL("http://borcteam.bplaced.net/Daten/java/versions");
+			URL url = new URL("http://borcteam.bplaced.net/files/java/versions");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.connect();
             // download the file
             InputStream input = connection.getInputStream();
             BufferedReader read = new BufferedReader(new InputStreamReader(input));
-            boolean udate = false;
-    		for(int i = 0;i<5;i++){
+    		for(int i = 0;i<7;i++){
     			String version = read.readLine();
     			String oldversion = MainActivity.checks[i].getversion();
-    			//System.out.println(version+" old: "+oldversion);
+    			System.out.println(version+" old: "+oldversion);
     			if(oldversion.equals(version)){
     				update[i] = false;
     			}
@@ -54,7 +54,9 @@ public class Update extends Thread{
 			}
             activity.runOnUiThread(new Runnable() {
                 public void run() {
-                	listadapter.notifyDataSetChanged();
+                	activity.lv.setAdapter(new MainList(activity));
+                	if(listadapter!=null)listadapter.notifyDataSetChanged();
+                	if(activity.state == 2)listadapter.update();
                 	Toast.makeText(MainActivity.context, toast, Toast.LENGTH_LONG).show();
                 }
             });

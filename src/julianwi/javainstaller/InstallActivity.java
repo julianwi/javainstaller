@@ -93,7 +93,15 @@ public class InstallActivity extends Activity implements Runnable {
 					ids2.add(i);
 				}
 			}
-			il.notifyDataSetChanged();
+			if((3&pkgs)==3){
+				lls.add(makell(0));
+			}
+			handler.post(new Runnable() {
+				@Override
+				public void run() {
+					il.notifyDataSetChanged();
+				}
+			});
 			if((3&pkgs)==2 || (!MainActivity.checks[0].installed && pkgs >> 2 != 0)){
 				new Download((ProgressBar)lls.get(0).findViewById(1), (TextView)lls.get(0).findViewById(2), new URL(MainActivity.checks[0].getSource()), handler, "/data/data/julianwi.javainstaller/"+Checkforfile.file[0], this).run();
 				chmod(new File("/data/data/julianwi.javainstaller/androidterm.apk"), 0644);
@@ -128,7 +136,7 @@ public class InstallActivity extends Activity implements Runnable {
 			
 			if(ids2.size()!=0){
 				Writer writer;
-				if(testrunactivity(1)){
+				if(!testrunactivity(1)){
 					writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/data/data/julianwi.javainstaller/install.sh"), "utf-8"));
 				}else{
 					writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("/data/data/julianwi.javainstaller/install2.sh"), "utf-8"));
@@ -250,7 +258,7 @@ public class InstallActivity extends Activity implements Runnable {
 				writer.write(":"+MainActivity.checks[id].getPath());
 			}
 		}
-		writer.write("\nexec "+MainActivity.checks[2].getPath()+"/ld-linux.so.2 MainActivity.checks[5].getPath()/jamvm -Xbootclasspath:"+MainActivity.checks[5].getPath()+"/classes.zip:"+MainActivity.checks[6].getPath()+"/glibj.zip:"+MainActivity.checks[8].getPath()+"/awtpeer.zip -Dawt.toolkit=julianwi.awtpeer.AndroidToolkit $@\n");
+		writer.write("\nexec "+MainActivity.checks[2].getPath()+"/ld-linux.so.2 "+MainActivity.checks[5].getPath()+"/jamvm -Xbootclasspath:"+MainActivity.checks[5].getPath()+"/classes.zip:"+MainActivity.checks[6].getPath()+"/glibj.zip:"+MainActivity.checks[8].getPath()+"/awtpeer.zip -Dawt.toolkit=julianwi.awtpeer.AndroidToolkit $@\n");
 		writer.close();
 		chmod(new File("/data/data/julianwi.javainstaller/java"), 0755);
 	}

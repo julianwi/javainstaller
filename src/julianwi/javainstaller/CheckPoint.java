@@ -88,7 +88,11 @@ public class CheckPoint implements OnClickListener,
 			showalert();
 			break;
 		case 3:
-			new Install(this);
+			Intent intent1 = new Intent(MainActivity.ma, InstallActivity.class);
+			Bundle b1 = new Bundle();
+			b1.putInt("packages", 1 << id+1);
+			intent1.putExtras(b1);
+			MainActivity.ma.startActivity(intent1);
 			break;
 		}
 	}
@@ -133,7 +137,7 @@ public class CheckPoint implements OnClickListener,
 		if(id == 1){
 			try {
 				Process p;
-				p = Runtime.getRuntime().exec(getPath());
+				p = Runtime.getRuntime().exec(getPath()+"/busybox");
 				InputStream a = p.getInputStream();
 				InputStreamReader read = new InputStreamReader(a);
 				String line = (new BufferedReader(read)).readLine();
@@ -146,8 +150,8 @@ public class CheckPoint implements OnClickListener,
 			} catch (IOException e) {
 			}
 		}
-		if(id == 2 || id == 3){
-			File versionfile = new File(getPath()+"/version");
+		if(id == 2 || id == 3 || id == 4 || id == 5 || id == 6){
+			File versionfile = new File(getPath()+"/"+Checkforfile.file[id].substring(0, Checkforfile.file[id].length()-7)+".version");
 			if(versionfile.exists()){
 				try {
 					version = new BufferedReader(new InputStreamReader(new FileInputStream(versionfile))).readLine();
@@ -155,16 +159,7 @@ public class CheckPoint implements OnClickListener,
 				}
 			}
 		}
-		if(id == 4){
-			try {
-				PackageInfo pInfo = MainActivity.context.getPackageManager().getPackageInfo("julianwi.awtpeer", 0);
-				version = pInfo.versionName;
-			} catch (Exception e) {
-			}
-		}
-		if(version == null){
-			version = "undefined";
-		}
+		System.out.println(text+" version = "+version);
 		return version;
 	}
 

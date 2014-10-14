@@ -1,15 +1,6 @@
 package julianwi.javainstaller;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-import java.util.ArrayList;
-
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 
@@ -19,10 +10,10 @@ public class Checkforfile {
 	public static String files[][] = new String[][]{
 		new String[]{},
 		new String[]{"busybox"},
-		new String[]{"ld-linux.so.2", "libBrokenLocale.so.1", "libSegFault.so", "libanl.so.1", "libc.so.6" ,"libcidn.so.1", "libcrypt.so.1", "libdl.so.2", "libm.so.6", "libmemusage.so", "libnsl.so.1", "libnss_compat.so.2", "libnss_db.so.2", "libnss_dns.so.2", "libnss_files.so.2", "libnss_hesiod.so.2", "libnss_nis.so.2", "libnss_nisplus.so.2", "libpcprofile.so", "libpthread.so.0", "libresolv.so.2", "librt.so.1", "libthread_db.so.1", "libutil.so.1"},
-		new String[]{"libz.so.1", "zlib.pc"},
-		new String[]{"libffi.pc", "libffi.so.6"},
-		new String[]{"classes.zip", "jamvm"},
+		new String[]{"ld-linux.so.2", "libBrokenLocale.so.1", "libSegFault.so", "libanl.so.1", "libc.so.6" ,"libc.version" ,"libcidn.so.1", "libcrypt.so.1", "libdl.so.2", "libm.so.6", "libmemusage.so", "libnsl.so.1", "libnss_compat.so.2", "libnss_db.so.2", "libnss_dns.so.2", "libnss_files.so.2", "libnss_hesiod.so.2", "libnss_nis.so.2", "libnss_nisplus.so.2", "libpcprofile.so", "libpthread.so.0", "libresolv.so.2", "librt.so.1", "libthread_db.so.1", "libutil.so.1"},
+		new String[]{"libz.so.1", "zlib.version"},
+		new String[]{"libffi.so.6", "libffi.version"},
+		new String[]{"classes.zip", "jamvm", "jamvm.version"},
 		new String[]{"glibj.zip", "libgconfpeer.so", "libjavaio.so", "libjavalang.so", "libjavalangmanagement.so", "libjavalangreflect.so", "libjavanet.so", "libjavanio.so", "libjavautil.so", "tools.zip"}
 	};
 	
@@ -57,7 +48,7 @@ public class Checkforfile {
 		for (int i = 1; i < files.length; i++) {
 			Boolean installed = true;
 			for (int j = 0; j < files[i].length; j++) {
-				if(!checkfile(checks[i].getPath()+files[i][j])){
+				if(!checkfile(checks[i].getPath()+"/"+files[i][j])){
 					installed = false;
 				}
 			}

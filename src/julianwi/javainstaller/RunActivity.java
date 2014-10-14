@@ -50,10 +50,10 @@ public class RunActivity extends Activity {
 			else{
 				String javapath = getSharedPreferences("settings", 1).getString("path3", "");
 				if(settings.getString("rootmode2", "off").equals("on")){
-					arguments = new String[]{"/system/bin/su", "-c", javapath+"/java -jar "+getIntent().getDataString()};
+					arguments = new String[]{"/system/bin/su", "-c", "/data/data/julianwi.javainstaller/java -jar "+getIntent().getDataString()};
 				}
 				else{
-					arguments = new String[]{javapath+"/java", "-jar", getIntent().getDataString()};
+					arguments = new String[]{"/data/data/julianwi.javainstaller/java", "-jar", getIntent().getDataString()};
 				}
 			}
 			//create a pty

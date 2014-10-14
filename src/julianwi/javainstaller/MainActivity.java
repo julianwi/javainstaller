@@ -55,7 +55,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 	//private String[] checklist = new String[]{"install busybox", "install Terminal Emulator", "install gnu libc", "install precompiled versions of jamvm and gnu classpath"};
 	//private Boolean[] checklist2 = new Boolean[]{false, false, false, false};
 	//private String[] checklist3 = new String[]{"/data/data/jackpal.androidterm/bin/busybox", "/data/app/jackpal.androidterm-1.apk", "", ""};
-	private ListView lv;
+	public ListView lv;
 	public ListView lv2;
 	public ChecklistAdapter listenAdapter;
 	public static SharedPreferences sharedP;
@@ -91,7 +91,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 	protected void onResume() {
 		Checkforfile cff = new Checkforfile();
 		cff.scan(checks);
-		listenAdapter.notifyDataSetChanged();
+		if(listenAdapter != null)listenAdapter.notifyDataSetChanged();
 		lv.setAdapter(new MainList(this));
 		if(state == 2)listenAdapter.update();
 		if(state == 0)setContentView(lv);
@@ -136,7 +136,7 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 			String key) {
 		Checkforfile cff = new Checkforfile();
 		cff.scan(checks);
-		listenAdapter.notifyDataSetChanged();
+		if(listenAdapter!=null)listenAdapter.notifyDataSetChanged();
 	}
 	
 	public void choosefile(String type){
