@@ -58,7 +58,7 @@ public class MainList extends BaseAdapter implements OnClickListener {
 		switch (v.getId()) {
 		case 0:
 			int packages = packages();
-			if(packages==0)packages=255;
+			if(packages==0)packages=255-6;
 			Intent intent = new Intent(ma, InstallActivity.class);
 			Bundle b = new Bundle();
 			b.putInt("packages", packages);

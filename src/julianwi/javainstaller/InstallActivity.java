@@ -46,6 +46,7 @@ public class InstallActivity extends Activity implements Runnable {
 		il = new InstallList(lls);
 		lv.setAdapter(il);
 		setContentView(lv);
+		init();
 		new Thread(this).start();
 	}
 	
@@ -73,43 +74,13 @@ public class InstallActivity extends Activity implements Runnable {
 	public void run() {
 		try {
 			if((3&pkgs)==2 || (!MainActivity.checks[0].installed && pkgs >> 2 != 0)){
-				lls.add(makell(0));
-				term=1;
-			}
-			uninstall = (pkgs & 1)==1;
-			if((4&pkgs)==4 || (!MainActivity.checks[1].installed && pkgs >> 3 != 0 && !uninstall)){
-				lls.add(makell(1));
-				ids.add(1);
-			}
-			for (int i = 2; i < MainActivity.checks.length; i++) {
-				if(((2<<i)&pkgs)==(2<<i)&&testrunactivity(i)==testrunactivity(1)){
-					lls.add(makell(i));
-					ids.add(i);
-				}
-			}
-			for (int i = 2; i < MainActivity.checks.length; i++) {
-				if(((2<<i)&pkgs)==(2<<i)&&testrunactivity(i)!=testrunactivity(1)){
-					lls.add(makell(i));
-					ids2.add(i);
-				}
-			}
-			if((3&pkgs)==3){
-				lls.add(makell(0));
-			}
-			handler.post(new Runnable() {
-				@Override
-				public void run() {
-					il.notifyDataSetChanged();
-				}
-			});
-			if((3&pkgs)==2 || (!MainActivity.checks[0].installed && pkgs >> 2 != 0)){
 				new Download((ProgressBar)lls.get(0).findViewById(1), (TextView)lls.get(0).findViewById(2), new URL(MainActivity.checks[0].getSource()), handler, "/data/data/julianwi.javainstaller/"+Checkforfile.file[0], this).run();
 				chmod(new File("/data/data/julianwi.javainstaller/androidterm.apk"), 0644);
 				Intent intent = new Intent(Intent.ACTION_VIEW);
 			    intent.setDataAndType(Uri.fromFile(new File("/data/data/julianwi.javainstaller/androidterm.apk")), "application/vnd.android.package-archive");
 			    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			    this.startActivity(intent);
-			    return;
+			    if(checkCallingOrSelfPermission("jackpal.androidterm.permission.RUN_SCRIPT")!=PackageManager.PERMISSION_GRANTED)return;
 			}
 			if(ids.size()!=0){
 				Writer writer;
@@ -277,6 +248,33 @@ public class InstallActivity extends Activity implements Runnable {
 			}
 		}
 	}
-
+	
+	public void init(){
+		if((3&pkgs)==2 || (!MainActivity.checks[0].installed && pkgs >> 2 != 0)){
+			lls.add(makell(0));
+			term=1;
+		}
+		uninstall = (pkgs & 1)==1;
+		if((4&pkgs)==4 || (!MainActivity.checks[1].installed && pkgs >> 3 != 0 && !uninstall)){
+			lls.add(makell(1));
+			ids.add(1);
+		}
+		for (int i = 2; i < MainActivity.checks.length; i++) {
+			if(((2<<i)&pkgs)==(2<<i)&&testrunactivity(i)==testrunactivity(1)){
+				lls.add(makell(i));
+				ids.add(i);
+			}
+		}
+		for (int i = 2; i < MainActivity.checks.length; i++) {
+			if(((2<<i)&pkgs)==(2<<i)&&testrunactivity(i)!=testrunactivity(1)){
+				lls.add(makell(i));
+				ids2.add(i);
+			}
+		}
+		if((3&pkgs)==3){
+			lls.add(makell(0));
+		}
+		il.notifyDataSetChanged();
+	}
 
 }

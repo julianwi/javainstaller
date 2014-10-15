@@ -162,10 +162,10 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 					Intent i = new Intent("jackpal.androidterm.RUN_SCRIPT");
 					i.addCategory(Intent.CATEGORY_DEFAULT);
 					if(MainActivity.context.getSharedPreferences("julianwi.javainstaller_preferences", 1).getString("rootmode2", "off").equals("on")){
-						i.putExtra("jackpal.androidterm.iInitialCommand", "su\n"+javapath+"/java -jar "+FilePath);
+						i.putExtra("jackpal.androidterm.iInitialCommand", "su\n/data/data/julianwi.javainstaller/java -jar "+FilePath);
 					}
 					else{
-						i.putExtra("jackpal.androidterm.iInitialCommand", javapath+"/java -jar "+FilePath);
+						i.putExtra("jackpal.androidterm.iInitialCommand", "/data/data/julianwi.javainstaller/java -jar "+FilePath);
 					}
 					startActivity(i);
 				}
