@@ -229,7 +229,7 @@ public class InstallActivity extends Activity implements Runnable {
 				writer.write(":"+MainActivity.checks[id].getPath());
 			}
 		}
-		writer.write("\nexec "+MainActivity.checks[2].getPath()+"/ld-linux.so.2 "+MainActivity.checks[5].getPath()+"/jamvm -Xbootclasspath:"+MainActivity.checks[5].getPath()+"/classes.zip:"+MainActivity.checks[6].getPath()+"/glibj.zip:"+MainActivity.checks[8].getPath()+"/awtpeer.zip -Dawt.toolkit=julianwi.awtpeer.AndroidToolkit $@\n");
+		writer.write("\nexec "+MainActivity.checks[2].getPath()+"/ld-linux.so.* "+MainActivity.checks[5].getPath()+"/jamvm -Xbootclasspath:"+MainActivity.checks[5].getPath()+"/classes.zip:"+MainActivity.checks[6].getPath()+"/glibj.zip:"+MainActivity.checks[8].getPath()+"/awtpeer.zip -Dawt.toolkit=julianwi.awtpeer.AndroidToolkit $@\n");
 		writer.close();
 		chmod(new File("/data/data/julianwi.javainstaller/java"), 0755);
 	}

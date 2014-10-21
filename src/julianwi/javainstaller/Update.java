@@ -6,7 +6,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-import android.app.Activity;
 import android.widget.Toast;
 
 public class Update extends Thread{
@@ -25,7 +24,7 @@ public class Update extends Thread{
 	@Override
 	public void run() {
 		try {
-			URL url = new URL("http://borcteam.bplaced.net/files/java/versions");
+			URL url = new URL((Checkforfile.getArch().equals("arm"))?"http://borcteam.bplaced.net/files/java/arm/versions":"http://borcteam.bplaced.net/files/java/versions");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.connect();
             // download the file

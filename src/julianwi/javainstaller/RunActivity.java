@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -16,6 +18,7 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 
 public class RunActivity extends Activity {
 	
@@ -79,7 +82,8 @@ public class RunActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		menu.add("settings");
+		menu.add(0,0,0,"settings");
+		menu.add(0,1,0,"show softkeyboard");
 		return true;
 	}
 	
@@ -115,6 +119,15 @@ public class RunActivity extends Activity {
 	        	Intent intent = new Intent(MainActivity.context, SettingsActivity.class);
 			    MainActivity.context.startActivity(intent);
 	            return true;
+	        case 1:
+	        	Object keyboard = getSystemService(Context.INPUT_METHOD_SERVICE);
+			try {
+				Method showSoftInput = Thread.currentThread().getContextClassLoader().loadClass("android.view.inputmethod.InputMethodManager").getMethod("showSoftInput", new Class[]{View.class, int.class});
+				showSoftInput.invoke(keyboard, new Object[]{emulatorview, 0});
+			} catch (Exception e) {
+				e.printStackTrace();
+				new Error("error", e.toString(), this);
+			}
 	     }
 		return false;
 	}

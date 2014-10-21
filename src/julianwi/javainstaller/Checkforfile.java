@@ -1,6 +1,7 @@
 package julianwi.javainstaller;
 
 import java.io.File;
+
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageManager.NameNotFoundException;
 
@@ -14,19 +15,27 @@ public class Checkforfile {
 		new String[]{"libz.so.1", "zlib.version"},
 		new String[]{"libffi.so.6", "libffi.version"},
 		new String[]{"classes.zip", "jamvm", "jamvm.version"},
-		new String[]{"glibj.zip", "libgconfpeer.so", "libjavaio.so", "libjavalang.so", "libjavalangmanagement.so", "libjavalangreflect.so", "libjavanet.so", "libjavanio.so", "libjavautil.so", "tools.zip"}
+		new String[]{"classpath.version", "glibj.zip", "libgconfpeer.so", "libjavaio.so", "libjavalang.so", "libjavalangmanagement.so", "libjavalangreflect.so", "libjavanet.so", "libjavanio.so", "libjavautil.so", "tools.zip"}
 	};
 	
+	static {
+		if(getArch().equals("arm")) {
+			files[2][0] = "ld-linux.so.3";
+			files[5] = new String[]{"classes.zip", "jamvm", "jamvm.version", "libgcc_s.so.1"};
+		}
+	}
+	
 	 public void scan(CheckPoint[] checks){
+		 final String defaultsrc = (getArch().equals("arm"))?"http://borcteam.bplaced.net/files/java/arm/":"http://borcteam.bplaced.net/files/java/";
 		 Editor edit = MainActivity.sharedP.edit();
 		 if(!MainActivity.sharedP.contains("path4")){
 			 edit.putString("path0", "/data/app/");
-			 edit.putString("source0", "http://borcteam.bplaced.net/files/java/androidterm.apk");
+			 edit.putString("source0", defaultsrc+"androidterm.apk");
 			 edit.putString("path1", "/data/data/jackpal.androidterm/bin");
-			 edit.putString("source1", "http://borcteam.bplaced.net/files/java/busybox");
+			 edit.putString("source1", defaultsrc+"busybox");
 			 for(int i=2;i<=8;i++){
 				 edit.putString("path"+i, "/data/data/julianwi.javainstaller/javafiles");
-				 edit.putString("source"+i, "http://borcteam.bplaced.net/files/java/"+file[i]);
+				 edit.putString("source"+i, defaultsrc+file[i]);
 			 }
 			 edit.commit();
 		 }
@@ -99,6 +108,17 @@ public class Checkforfile {
 	    } catch (NameNotFoundException e) {
 	        return false;
 	    }
+	}
+	
+	public static String getArch() {
+		// Returns the value of uname -m
+		String machine = System.getProperty("os.arch");
+		// Convert machine name to arch identifier
+		if (machine.matches("armv[0-9]+(tej?)?l") || machine.equals("OS_ARCH")) {
+		return "arm";
+		} else {
+		return "x86";
+		}
 	}
 
 }
