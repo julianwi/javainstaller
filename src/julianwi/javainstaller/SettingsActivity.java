@@ -76,7 +76,7 @@ public class SettingsActivity extends PreferenceActivity {
         root.addPreference(dialogBasedPrefCat3); // Adding a category
  
         // List preference under the category
-        CharSequence[] cspath = new String[] { "on", "off", "if java is installed" };
+        CharSequence[] cspath = new String[] { "on", "off", "if jamvm is installed" };
         ListPreference listPref3 = new ListPreference(this);
         listPref3.setKey("broadcast");
         listPref3.setDefaultValue(cspath[2]);
@@ -88,10 +88,10 @@ public class SettingsActivity extends PreferenceActivity {
         dialogBasedPrefCat3.addPreference(listPref3);
         EditTextPreference path = new EditTextPreference(this);
         path.setKey("broadcastpath");
-        path.setDefaultValue("%javapath%");
+        path.setDefaultValue("/data/data/julianwi.javainstaller");
         path.setDialogTitle("path to broadcast");
         path.setTitle("path to broadcast");
-        path.setSummary("%javapath% for the install path of jamvm and gnu classpath");
+        path.setSummary("path to broadcast");
         dialogBasedPrefCat3.addPreference(path);
  
         return root;

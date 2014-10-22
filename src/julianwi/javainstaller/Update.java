@@ -10,9 +10,9 @@ import android.widget.Toast;
 
 public class Update extends Thread{
 	
-	public static boolean update[] = {false, false, false, false, false, false, false};
+	public static boolean update[] = {false, false, false, false, false, false, false, false, false};
 	public static boolean udate = false;
-	public static String updatetext[] = new String[7];
+	public static String updatetext[] = new String[9];
 	private ChecklistAdapter listadapter;
 	private MainActivity activity;
 	
@@ -30,11 +30,11 @@ public class Update extends Thread{
             // download the file
             InputStream input = connection.getInputStream();
             BufferedReader read = new BufferedReader(new InputStreamReader(input));
-    		for(int i = 0;i<7;i++){
+    		for(int i = 0;i<9;i++){
     			String version = read.readLine();
     			String oldversion = MainActivity.checks[i].getversion();
     			System.out.println(version+" old: "+oldversion);
-    			if(oldversion.equals(version)){
+    			if(oldversion.equals(version) || !MainActivity.checks[i].installed){
     				update[i] = false;
     			}
     			else{

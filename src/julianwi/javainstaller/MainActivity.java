@@ -1,42 +1,18 @@
 package julianwi.javainstaller;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.net.URL;
-import java.util.List;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
-import android.content.pm.ActivityInfo;
-import android.content.pm.ApplicationInfo;
-import android.content.pm.FeatureInfo;
-import android.content.pm.InstrumentationInfo;
-import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.content.pm.PermissionGroupInfo;
-import android.content.pm.PermissionInfo;
-import android.content.pm.ProviderInfo;
-import android.content.pm.ResolveInfo;
-import android.content.pm.ServiceInfo;
 import android.content.pm.PackageManager.NameNotFoundException;
-import android.content.res.Resources;
-import android.content.res.XmlResourceParser;
-import android.graphics.drawable.Drawable;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 public class MainActivity extends Activity implements OnSharedPreferenceChangeListener {
@@ -158,7 +134,6 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 				    MainActivity.context.startActivity(intent);
 				}
 				else{
-					String javapath = sharedP.getString("path3", "");
 					Intent i = new Intent("jackpal.androidterm.RUN_SCRIPT");
 					i.addCategory(Intent.CATEGORY_DEFAULT);
 					if(MainActivity.context.getSharedPreferences("julianwi.javainstaller_preferences", 1).getString("rootmode2", "off").equals("on")){

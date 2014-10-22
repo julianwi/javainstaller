@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -145,13 +144,21 @@ public class CheckPoint implements OnClickListener,
 			} catch (IOException e) {
 			}
 		}
-		if(id == 2 || id == 3 || id == 4 || id == 5 || id == 6){
+		if(id == 2 || id == 3 || id == 4 || id == 5 || id == 6 || id == 7){
 			File versionfile = new File(getPath()+"/"+Checkforfile.file[id].substring(0, Checkforfile.file[id].length()-7)+".version");
 			if(versionfile.exists()){
 				try {
 					version = new BufferedReader(new InputStreamReader(new FileInputStream(versionfile))).readLine();
 				} catch (Exception e) {
 				}
+			}
+		}
+		if(id == 8){
+			try{
+				PackageInfo pInfo = MainActivity.context.getPackageManager().getPackageInfo("julianwi.awtpeer", 0);
+				version = pInfo.versionName;
+			}
+			catch(Exception e){
 			}
 		}
 		System.out.println(text+" version = "+version);

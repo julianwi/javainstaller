@@ -157,6 +157,9 @@ public class InstallActivity extends Activity implements Runnable {
 			for(String file : Checkforfile.files[mcheck.id]){
 				writer.write("rm "+mcheck.getPath()+"/"+file+"\n");
 			}
+			if(mcheck.id == 8){
+				writer.write("am start --user 0 -a android.intent.action.DELETE -d package:julianwi.awtpeer\n");
+			}
 			return;
 		}
 		if(mcheck.id == 1){
@@ -178,10 +181,7 @@ public class InstallActivity extends Activity implements Runnable {
 			writer.write("$bbdir chmod 0755 *\n");
 		}
 		if(mcheck.id == 8){
-			writer.write("$bbdir mkdir -p "+MainActivity.checks[3].getPath()+"/lib\n$bbdir chmod 0755 "+MainActivity.checks[3].getPath()+"/lib\ncd "+MainActivity.checks[3].getPath()+"/lib\n");
-			writer.write("$bbdir tar -xvzpf /data/data/julianwi.javainstaller/"+Checkforfile.file[mcheck.id]+"\n");
-			writer.write("$bbdir chmod 0755 *\n");
-			writer.write("am start --user 0 -a android.intent.action.VIEW -d file://"+MainActivity.checks[3].getPath()+"/lib/awtonandroid.apk -t application/vnd.android.package-archive\n");
+			writer.write("am start --user 0 -a android.intent.action.VIEW -d file://"+mcheck.getPath()+"/awtonandroid.apk -t application/vnd.android.package-archive\n");
 		}
 		/*if(mcheck.id == 3 || mcheck.id == 4){
 			writer.write("echo \"#!/system/bin/sh\" > "+MainActivity.checks[3].getPath()+"/java\n"

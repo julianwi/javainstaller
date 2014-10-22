@@ -7,7 +7,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 
 public class Checkforfile {
 	
-	public static String file[] = new String[]{"androidterm.apk", "busybox", "libc.tar.gz", "zlib.tar.gz", "libffi.tar.gz", "jamvm.tar.gz", "classpath.tar.gz", "freetype.tar.gz", "awtonandroid.tar.gz"};
+	public static String file[] = new String[]{"androidterm.apk", "busybox", "libc.tar.gz", "zlib.tar.gz", "libffi.tar.gz", "jamvm.tar.gz", "classpath.tar.gz", "freetype.tar.gz", "awt.tar.gz"};
 	public static String files[][] = new String[][]{
 		new String[]{},
 		new String[]{"busybox"},
@@ -15,7 +15,9 @@ public class Checkforfile {
 		new String[]{"libz.so.1", "zlib.version"},
 		new String[]{"libffi.so.6", "libffi.version"},
 		new String[]{"classes.zip", "jamvm", "jamvm.version"},
-		new String[]{"classpath.version", "glibj.zip", "libgconfpeer.so", "libjavaio.so", "libjavalang.so", "libjavalangmanagement.so", "libjavalangreflect.so", "libjavanet.so", "libjavanio.so", "libjavautil.so", "tools.zip"}
+		new String[]{"classpath.version", "glibj.zip", "libgconfpeer.so", "libjavaio.so", "libjavalang.so", "libjavalangmanagement.so", "libjavalangreflect.so", "libjavanet.so", "libjavanio.so", "libjavautil.so", "tools.zip"},
+		new String[]{"freetype.version", "libfreetype.so.6"},
+		new String[]{"awtonandroid.apk", "awtpeer.zip", "libftpeer.so"}
 	};
 	
 	static {
