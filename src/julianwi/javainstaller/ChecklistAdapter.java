@@ -63,7 +63,7 @@ public class ChecklistAdapter extends BaseAdapter implements OnItemClickListener
 		LinearLayout ll = new LinearLayout(mcontext);
 		ll.setOrientation(LinearLayout.VERTICAL);
 		TextView tv = new TextView(mcontext);
-		tv.setText(Html.fromHtml("<h2>"+List[position].text+"</h2>"+List[position].source+"<br>"+"path:"+List[position].getPath()+"<br>"+"source:"+List[position].getSource()+((Update.update[position])?"<br>"+Update.updatetext:"")));
+		tv.setText(Html.fromHtml("<h2>"+List[position].text+"</h2>"+List[position].source+"<br>"+"path:"+List[position].getPath()+"<br>"+"source:"+List[position].getSource()));
 		LinearLayout ll2 = new LinearLayout(mcontext);
 		Button b = new Button(mcontext);
 		b.setText("change path");

@@ -54,6 +54,7 @@ public class CheckPoint implements OnClickListener,
 			edit.putString("source"+id, value);
 		}
 		edit.commit();
+		MainActivity.ma.update();
 	}
 
 	@Override

@@ -65,13 +65,8 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 	
 	@Override
 	protected void onResume() {
-		Checkforfile cff = new Checkforfile();
-		cff.scan(checks);
-		if(listenAdapter != null)listenAdapter.notifyDataSetChanged();
-		lv.setAdapter(new MainList(this));
-		if(state == 2)listenAdapter.update();
-		if(state == 0)setContentView(lv);
 		super.onResume();
+		update();
 		if(checkCallingOrSelfPermission("jackpal.androidterm.permission.RUN_SCRIPT")!=PackageManager.PERMISSION_GRANTED){
 			try {
 				getPackageManager().getPackageInfo("jackpal.androidterm", PackageManager.GET_ACTIVITIES);
@@ -162,6 +157,15 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);
+	}
+	
+	public void update() {
+		Checkforfile cff = new Checkforfile();
+		cff.scan(checks);
+		if(listenAdapter != null)listenAdapter.notifyDataSetChanged();
+		lv.setAdapter(new MainList(this));
+		if(state == 2)listenAdapter.update();
+		if(state == 0)setContentView(lv);
 	}
 
 }

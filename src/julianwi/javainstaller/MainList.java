@@ -40,9 +40,9 @@ public class MainList extends BaseAdapter implements OnClickListener {
 			b.setOnClickListener(this);
 		}
 		switch (position){
-			case 0:	b.setText((packages()!=0)?"install java runtime comandline only":"uninstall java runtime");
+			case 0:	b.setText((packages(false)!=0)?"install java runtime comandline only":"uninstall java runtime");
 			break;
-			case 1: b.setText("install java runtime with awt graphic librarys");
+			case 1: b.setText((packages(true)!=0)?"install java runtime with awt graphic librarys":"uninstall awt graphic librarys");
 			break;
 			case 2: b.setText("view package list"+((Update.udate)?" (updates available)":""));
 			break;
@@ -57,13 +57,22 @@ public class MainList extends BaseAdapter implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case 0:
-			int packages = packages();
+			int packages = packages(false);
 			if(packages==0)packages=255-6;
 			Intent intent = new Intent(ma, InstallActivity.class);
 			Bundle b = new Bundle();
 			b.putInt("packages", packages);
 			intent.putExtras(b);
 			ma.startActivity(intent);
+			break;
+		case 1:
+			int packages1 = packages(true);
+			if(packages1==0)packages1=769;
+			Intent intent1 = new Intent(ma, InstallActivity.class);
+			Bundle b1 = new Bundle();
+			b1.putInt("packages", packages1);
+			intent1.putExtras(b1);
+			ma.startActivity(intent1);
 			break;
 		case 2:
 			ma.lv2 = new ListView(ma);
@@ -79,9 +88,9 @@ public class MainList extends BaseAdapter implements OnClickListener {
 		}
 	}
 	
-	public int packages(){
+	public int packages(boolean awt){
 		int packages = 0;
-		for (int i = 0; i < 7; i++) {
+		for (int i = 0; i < ((awt)?9:7); i++) {
 			packages = packages+(((MainActivity.checks[i].installed)?0:1)<<(i+1));
 		}
 		return packages;

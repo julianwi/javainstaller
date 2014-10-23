@@ -122,7 +122,7 @@ public class InstallActivity extends Activity implements Runnable {
 					}
 					writesh(writer, mcheck);
 				}
-				writer.write("echo installation complete\n");
+				writer.write((uninstall)?"echo uninstallation complete\n":"echo installation complete\n");
 				writer.write("exit");
 				writer.close();
 				runterm(testrunactivity(ids2.get(0)));

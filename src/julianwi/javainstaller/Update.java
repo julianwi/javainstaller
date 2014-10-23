@@ -13,17 +13,16 @@ public class Update extends Thread{
 	public static boolean update[] = {false, false, false, false, false, false, false, false, false};
 	public static boolean udate = false;
 	public static String updatetext[] = new String[9];
-	private ChecklistAdapter listadapter;
 	private MainActivity activity;
 	
 	public Update(ChecklistAdapter la, MainActivity mactivity){
-		listadapter = la;
 		activity = mactivity;
 	}
 
 	@Override
 	public void run() {
 		try {
+			udate = false;
 			URL url = new URL((Checkforfile.getArch().equals("arm"))?"http://borcteam.bplaced.net/files/java/arm/versions":"http://borcteam.bplaced.net/files/java/versions");
 			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.connect();
@@ -53,9 +52,7 @@ public class Update extends Thread{
 			}
             activity.runOnUiThread(new Runnable() {
                 public void run() {
-                	activity.lv.setAdapter(new MainList(activity));
-                	if(listadapter!=null)listadapter.notifyDataSetChanged();
-                	if(activity.state == 2)listadapter.update();
+                	activity.update();
                 	Toast.makeText(MainActivity.context, toast, Toast.LENGTH_LONG).show();
                 }
             });
