@@ -225,7 +225,7 @@ public class InstallActivity extends Activity implements Runnable {
 		writer.write("#!/system/bin/sh\n");
 		writer.write("export LD_LIBRARY_PATH="+MainActivity.checks[2].getPath());
 		for (int id : new int[]{3,4,6,7,8}) {
-			if(MainActivity.checks[id].installed && MainActivity.checks[id].getPath()!=MainActivity.checks[2].getPath()){
+			if(MainActivity.checks[id].installed && !MainActivity.checks[id].getPath().equals(MainActivity.checks[2].getPath())){
 				writer.write(":"+MainActivity.checks[id].getPath());
 			}
 		}
