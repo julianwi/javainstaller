@@ -69,6 +69,7 @@ public class ChecklistAdapter extends BaseAdapter implements OnItemClickListener
 		b.setText("change path");
 		b.setId(1);
 		b.setOnClickListener(List[position]);
+		if(position==0)b.setEnabled(false);
 		Button b2 = new Button(mcontext);
 		b2.setText("change source");
 		b2.setId(2);
