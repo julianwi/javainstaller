@@ -15,7 +15,7 @@ public class Checkforfile {
 		new String[]{"libz.so.1", "zlib.version"},
 		new String[]{"libffi.so.6", "libffi.version"},
 		new String[]{"classes.zip", "jamvm", "jamvm.version"},
-		new String[]{"classpath.version", "glibj.zip", "libgconfpeer.so", "libjavaio.so", "libjavalang.so", "libjavalangmanagement.so", "libjavalangreflect.so", "libjavanet.so", "libjavanio.so", "libjavautil.so", "tools.zip"},
+		new String[]{"classpath.version", "glibj.zip", "libjavaio.so", "libjavalang.so", "libjavalangmanagement.so", "libjavalangreflect.so", "libjavanet.so", "libjavanio.so", "libjavautil.so", "tools.zip"},
 		new String[]{"freetype.version", "libfreetype.so.6"},
 		new String[]{"awtonandroid.apk", "awtpeer.zip", "libftpeer.so"}
 	};
