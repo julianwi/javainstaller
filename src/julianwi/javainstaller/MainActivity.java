@@ -26,7 +26,8 @@ public class MainActivity extends Activity implements OnSharedPreferenceChangeLi
 			new CheckPoint("jamvm","JamVM is a new Java Virtual Machine conforming to the JVM specification edition 2 (blue book)" ,5),
 			new CheckPoint("gnu classpath","free implementation of the standard class library for the Java programming language" ,6),
 			new CheckPoint("freetype", "FreeType is a freely available software library to render fonts", 7),
-			new CheckPoint("awtonandroid graphic libraries","java awt graphic libraries for android" ,8)
+			new CheckPoint("awtonandroid graphic libraries","java awt graphic libraries for android" ,8),
+			new CheckPoint("cairo", "Cairo is a 2D graphics library", 9)
 	};
 	//private String[] checklist = new String[]{"install busybox", "install Terminal Emulator", "install gnu libc", "install precompiled versions of jamvm and gnu classpath"};
 	//private Boolean[] checklist2 = new Boolean[]{false, false, false, false};

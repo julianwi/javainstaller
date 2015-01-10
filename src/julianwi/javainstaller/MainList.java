@@ -67,7 +67,7 @@ public class MainList extends BaseAdapter implements OnClickListener {
 			break;
 		case 1:
 			int packages1 = packages(true);
-			if(packages1==0)packages1=769;
+			if(packages1==0)packages1=1793;
 			Intent intent1 = new Intent(ma, InstallActivity.class);
 			Bundle b1 = new Bundle();
 			b1.putInt("packages", packages1);
@@ -90,7 +90,7 @@ public class MainList extends BaseAdapter implements OnClickListener {
 	
 	public int packages(boolean awt){
 		int packages = 0;
-		for (int i = 0; i < ((awt)?9:7); i++) {
+		for (int i = 0; i < ((awt)?10:7); i++) {
 			packages = packages+(((MainActivity.checks[i].installed)?0:1)<<(i+1));
 		}
 		return packages;

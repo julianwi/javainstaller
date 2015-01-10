@@ -7,7 +7,7 @@ import android.content.pm.PackageManager.NameNotFoundException;
 
 public class Checkforfile {
 	
-	public static String file[] = new String[]{"androidterm.apk", "busybox", "libc.tar.gz", "zlib.tar.gz", "libffi.tar.gz", "jamvm.tar.gz", "classpath.tar.gz", "freetype.tar.gz", "awt.tar.gz"};
+	public static String file[] = new String[]{"androidterm.apk", "busybox", "libc.tar.gz", "zlib.tar.gz", "libffi.tar.gz", "jamvm.tar.gz", "classpath.tar.gz", "freetype.tar.gz", "awt.tar.gz", "cairo.tar.gz"};
 	public static String files[][] = new String[][]{
 		new String[]{},
 		new String[]{"busybox"},
@@ -17,7 +17,8 @@ public class Checkforfile {
 		new String[]{"classes.zip", "jamvm", "jamvm.version"},
 		new String[]{"classpath.version", "glibj.zip", "libjavaio.so", "libjavalang.so", "libjavalangmanagement.so", "libjavalangreflect.so", "libjavanet.so", "libjavanio.so", "libjavautil.so", "tools.zip"},
 		new String[]{"freetype.version", "libfreetype.so.6"},
-		new String[]{"awtonandroid.apk", "awtpeer.zip", "libftpeer.so"}
+		new String[]{"awtonandroid.apk", "awtpeer.zip", "libftpeer.so"},
+		new String[]{"cairo.version", "libcairo.so.2", "libpixman-1.so.0"}
 	};
 	
 	static {
@@ -35,11 +36,15 @@ public class Checkforfile {
 			 edit.putString("source0", defaultsrc+"androidterm.apk");
 			 edit.putString("path1", "/data/data/jackpal.androidterm/bin");
 			 edit.putString("source1", defaultsrc+"busybox");
-			 for(int i=2;i<=8;i++){
+			 for(int i=2;i<=9;i++){
 				 edit.putString("path"+i, "/data/data/julianwi.javainstaller/javafiles");
 				 edit.putString("source"+i, defaultsrc+file[i]);
 			 }
 			 edit.commit();
+		 }
+		 if(!MainActivity.sharedP.contains("path9")){
+			 edit.putString("path"+9, "/data/data/julianwi.javainstaller/javafiles");
+			 edit.putString("source"+9, defaultsrc+file[9]);
 		 }
 		 if(checkpackage("jackpal.androidterm")){
 			 checks[0].installed = true;

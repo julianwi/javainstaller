@@ -145,7 +145,7 @@ public class CheckPoint implements OnClickListener,
 			} catch (IOException e) {
 			}
 		}
-		if(id == 2 || id == 3 || id == 4 || id == 5 || id == 6 || id == 7){
+		if(id == 2 || id == 3 || id == 4 || id == 5 || id == 6 || id == 7 || id == 9){
 			File versionfile = new File(getPath()+"/"+Checkforfile.file[id].substring(0, Checkforfile.file[id].length()-7)+".version");
 			if(versionfile.exists()){
 				try {
