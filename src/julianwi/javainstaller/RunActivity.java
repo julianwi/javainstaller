@@ -40,7 +40,7 @@ public class RunActivity extends Activity {
 			Bundle b = getIntent().getExtras();
 			//create a new terminal session
 			session = Class.forName("jackpal.androidterm.emulatorview.TermSession", true, classloader).getConstructor().newInstance(new Object[]{});
-			SharedPreferences settings = MainActivity.context.getSharedPreferences("julianwi.javainstaller_preferences", 1);
+			SharedPreferences settings = getSharedPreferences("julianwi.javainstaller_preferences", 1);
 			String[] arguments;
 			if(b != null && (Boolean)b.get("install")==true){
 				if(settings.getString("rootmode", "off").equals("on")){
