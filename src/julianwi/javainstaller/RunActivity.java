@@ -1,14 +1,12 @@
 package julianwi.javainstaller;
 
-import java.io.FileDescriptor;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.ParcelFileDescriptor;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,14 +16,14 @@ import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.InputMethodManager;
 
-public class RunActivity extends Activity {
+public class RunActivity extends Activity implements Runnable {
 	
 	private View emulatorview;
-	public static Object session;
-    private static FileDescriptor pseudoterm;
+	public static Object session, exec;
+    private static ParcelFileDescriptor pseudoterm;
     public ClassLoader classloader;
+	private Handler handler;
 	private static Class<?> termexec;
 	
 	@Override
@@ -42,32 +40,36 @@ public class RunActivity extends Activity {
 			session = Class.forName("jackpal.androidterm.emulatorview.TermSession", true, classloader).getConstructor().newInstance(new Object[]{});
 			SharedPreferences settings = getSharedPreferences("julianwi.javainstaller_preferences", 1);
 			String[] arguments;
+			//android terminal emulator version 1.0.66 and later wants the first argument twice
 			if(b != null && (Boolean)b.get("install")==true){
 				if(settings.getString("rootmode", "off").equals("on")){
-					arguments = new String[]{"/system/bin/su", "-c", "sh /data/data/julianwi.javainstaller/install.sh"};
+					arguments = new String[]{"/system/bin/su", "/system/bin/su", "-c", "sh /data/data/julianwi.javainstaller/install.sh"};
 				}
 				else{
-					arguments = new String[]{"/system/bin/sh", "/data/data/julianwi.javainstaller/install.sh"};
+					arguments = new String[]{"/system/bin/sh", "/system/bin/sh", "/data/data/julianwi.javainstaller/install.sh"};
 				}
 			}
 			else{
 				String javapath = getSharedPreferences("settings", 1).getString("path3", "");
 				if(settings.getString("rootmode2", "off").equals("on")){
-					arguments = new String[]{"/system/bin/su", "-c", "/data/data/julianwi.javainstaller/java -jar "+getIntent().getDataString()};
+					arguments = new String[]{"/system/bin/su", "/system/bin/su", "-c", "/data/data/julianwi.javainstaller/java -jar "+getIntent().getDataString()};
 				}
 				else{
-					arguments = new String[]{"/data/data/julianwi.javainstaller/java", "-jar", getIntent().getDataString()};
+					arguments = new String[]{"/data/data/julianwi.javainstaller/java", "/data/data/julianwi.javainstaller/java", "-jar", getIntent().getDataString()};
 				}
 			}
 			//create a pty
 			if(termexec == null){
-				termexec = Class.forName("jackpal.androidterm.Exec", true, classloader);
+				termexec = Class.forName("jackpal.androidterm.TermExec", true, classloader);
 			}
-			pseudoterm = (FileDescriptor) termexec.getMethod("createSubprocess", new Class[]{String.class, String[].class, String[].class, int[].class}).invoke(null, new Object[]{arguments[0], arguments, new String[]{}, new int[1]});
-	        
+			pseudoterm = ParcelFileDescriptor.open(new File("/dev/ptmx"), ParcelFileDescriptor.MODE_READ_WRITE);
+			exec = termexec.getConstructor(new Class[]{String[].class}).newInstance(new Object[]{arguments});
+			handler = new Handler();
+			new Thread(this).start();
+
 	        //connect the pty's I/O streams to the TermSession.
-	        session.getClass().getMethod("setTermIn", InputStream.class).invoke(session, new Object[]{new FileInputStream(pseudoterm)});
-	        session.getClass().getMethod("setTermOut", OutputStream.class).invoke(session, new Object[]{new FileOutputStream(pseudoterm)});
+	        session.getClass().getMethod("setTermOut", OutputStream.class).invoke(session, new Object[]{new ParcelFileDescriptor.AutoCloseOutputStream(pseudoterm)});
+	        session.getClass().getMethod("setTermIn", InputStream.class).invoke(session, new Object[]{new ParcelFileDescriptor.AutoCloseInputStream(pseudoterm)});
 	        //create the EmulatorView
 			DisplayMetrics metrics = new DisplayMetrics();
 			getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -102,17 +104,6 @@ public class RunActivity extends Activity {
 	}
 	
 	@Override
-	public void onDestroy(){
-		super.onDestroy();
-		try{
-			termexec.getMethod("close", new Class[]{FileDescriptor.class}).invoke(null, new Object[]{pseudoterm});
-		} catch(Exception e){
-			e.printStackTrace();
-			new Error("error", e.toString(), this);
-		}
-	}
-	
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 	    switch (item.getItemId()) {
 	        case 0:
@@ -130,6 +121,18 @@ public class RunActivity extends Activity {
 			}
 	     }
 		return false;
+	}
+
+	@Override
+	public void run() {
+		int pid;
+		try {
+			pid = (Integer) termexec.getMethod("start", new Class[]{ParcelFileDescriptor.class}).invoke(exec, new Object[]{pseudoterm});
+			System.out.println("process id is "+pid);
+		} catch (Exception e) {
+			e.printStackTrace();
+			handler.post(new Error(e, this));
+		}
 	}
 
 }
